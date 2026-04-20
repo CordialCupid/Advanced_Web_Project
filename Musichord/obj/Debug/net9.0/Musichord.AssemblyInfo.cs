@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+661fafc7d235cefbf4ff92c9026eeb531655e015")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+267ede03b673ee8567f1cad383f30314dff313ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
