@@ -27,6 +27,7 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <input asp-for="Input.SpotifyToken" type="hidden" class="form-control spotify-token" autocomplete="spot-token" aria-required="true" placeholder="token" />
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
@@ -64,4 +65,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script defer type="module" src="~/js/musichordRegister.js"></script>
 }
