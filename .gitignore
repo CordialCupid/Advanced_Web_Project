@@ -22,9 +22,9 @@ _UpgradeReport_Files/
 ###############
 # Directories #
 ###############
-bin/
-obj/
-TestResults/
+Musichord/bin/
+Musichord/obj/
+Musichord/TestResults/
 ###################
 # Web publish log #
 ###################
