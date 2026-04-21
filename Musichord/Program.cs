@@ -1,4 +1,5 @@
 using Musichord.Services;
+using Musichord.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IUserRepository, DbUserRepository>();
 
 var app = builder.Build();
 
