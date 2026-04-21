@@ -4,5 +4,5 @@ namespace Musichord.Models.Entities;
 
 public class ApplicationUser : IdentityUser
 {
-    public string? SpotifyToken { get; set; }
+    public string SpotifyToken { get; set; } = String.Empty;
 }
