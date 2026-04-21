@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d31411a0f097e2f245967fa882a52e9eedb67963")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09826b91c3cf11d79c48af1ee447e70a9f706db6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Musichord")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
