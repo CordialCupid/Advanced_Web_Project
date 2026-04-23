@@ -417,6 +417,6 @@ E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\bin\Debug\net9.0\tr\M
 E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\bin\Debug\net9.0\runtimes\win\lib\net8.0\System.Windows.Extensions.dll
-E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\si1omn6c2o-{0}-954ykz7wxp-954ykz7wxp.gz
-E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\rj551rls1s-{0}-qwepf2s1mx-qwepf2s1mx.gz
-E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\4hsxhojb1y-{0}-mgn28lp79u-mgn28lp79u.gz
+E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\si1omn6c2o-{0}-iygp6ud3h3-iygp6ud3h3.gz
+E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\rj551rls1s-{0}-s6mokwq1t6-s6mokwq1t6.gz
+E:\ETSU\ETSU 2026 Spring\Adv_Web_Project\Project\Musichord\obj\Debug\net9.0\compressed\4hsxhojb1y-{0}-g1pk1k88qa-g1pk1k88qa.gz
