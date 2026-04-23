@@ -5,8 +5,29 @@ import { SpotifyAJAXRepository } from "./spotifyAJAXRepo.js";
 await main();
 
 async function main() {
-    const spotRepo = new SpotifyAJAXRepository();
-    await spotRepo.retrieveAccessToken(retrieveCode());
+    const code = retrieveCode();
+    const spotRepo = new SpotifyAJAXRepository(); 
+    const registerBtn = document.getElementById('registerSubmit');
+    const addBtn = document.getElementById('spotifyAdd');
+    
+    await setUpEventHandlers(spotRepo);
+    console.log(code);
+    if (code != null) {
+        await spotRepo.retrieveAccessToken(code)
+            .then(async function() {
+                const accessToken = localStorage.getItem('access_token');
+                const spotResponse = await spotRepo.callSpotAPI('GET', '/v1/me', accessToken);             
+                document.getElementById('spotUser').value = spotResponse.display_name;
+                document.getElementById('spotEmail').value = spotResponse.email;
+                const tokenInp = document.querySelector('.spotify-token');
+                tokenInp.value = accessToken;
+                addBtn.disabled = true;
+                registerBtn.disabled = false;
+            })
+            .catch (error => {
+                console.log(error);
+            })
+    }
 }
 
 function retrieveCode() {
@@ -19,5 +40,15 @@ function retrieveCode() {
         code = urlParams.get('code');
     }
     return code;
+}
+
+async function setUpEventHandlers(spotRepo) {
+    document.addEventListener('click', async (e) => {
+        const addBtn = e.target.closest('#spotifyAdd');
+        if (addBtn) {
+            e.preventDefault();
+            await spotRepo.requestAuth();             
+        }
+    });
 }
 

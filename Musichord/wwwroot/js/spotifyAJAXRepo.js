@@ -1,10 +1,11 @@
 'use strict'; 
 
+import { SpotifyPKCE } from "./spotifyPCKE.js";
+
 export class SpotifyAJAXRepository {
     #AUTHORIZE = "https://accounts.spotify.com/authorize";
     #scopes = "user-read-private user-top-read user-read-email user-library-modify playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative";
     #clientId = "ad61ff7774e443b99cf8123f95809301";
-    #clientSecret = "a433dd0d69874f64b96d5a5cc193c496";
     #redirectURI = "http://127.0.0.1:5097/Identity/Account/Register";
     #baseAddress = 'https://api.spotify.com/v1/';
 
@@ -14,10 +15,6 @@ export class SpotifyAJAXRepository {
 
     get baseAddress() {
         return this.#baseAddress;
-    }
-
-    get secret() {
-        return this.#clientSecret;
     }
 
     get scopes() {
@@ -32,13 +29,17 @@ export class SpotifyAJAXRepository {
         return this.#redirectURI;
     }
       
-    requestAuth() {
+    async requestAuth() {
+        const pkce = new SpotifyPKCE();
+        const codeChallenge = await pkce.codeChallenge();
         let url = this.authorize;
         url += "?client_id=" + this.clientId;
         url += "&response_type=code";
         url += "&redirect_uri=" + encodeURI(this.redirectURI);
         url += "&show_dialog=true";
         url += "&scope=" + this.scopes;
+        url += "&code_challenge_method=S256";
+        url += "&code_challenge=" + codeChallenge;
         window.location.href = url;
     }
 
@@ -63,13 +64,11 @@ export class SpotifyAJAXRepository {
 
     async refreshAccessToken() {
         let refresh_Token = localStorage.getItem("refresh_token");
-        const authBasic = btoa(this.clientId + ':' + this.#clientSecret);
 
         return await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + authBasic,
             },
             body: new URLSearchParams({
                 'grant_type': 'refresh_token',
@@ -93,17 +92,18 @@ export class SpotifyAJAXRepository {
 
     // function to make post request to 'api/token' endpoint and retrieve access token
     async retrieveAccessToken(code) {
-        const authBasic = btoa(this.clientId + ':' + this.clientSecret);
+        const verifier = localStorage.getItem('codeVerifier');
         const spotResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + authBasic,
             },
             body: new URLSearchParams({
                 'code': code,
                 'grant_type': 'authorization_code',
-                'redirect_uri': 'http://127.0.0.1:5097/Identity/Account/Register'
+                'redirect_uri': 'http://127.0.0.1:5097/Identity/Account/Register',
+                'client_id': this.clientId,
+                'code_verifier': verifier
             })
         })
         .then(async response => {
@@ -119,8 +119,6 @@ export class SpotifyAJAXRepository {
             if (content.access_token != undefined) {
                 let access_token = content.access_token;
                 localStorage.setItem("access_token", access_token);
-                const tokenInp = document.querySelector('.spotify-token');
-                tokenInp.value = access_token;
             }
             if (content.refresh_token != undefined) {
                 let refresh_token = content.refresh_token;
