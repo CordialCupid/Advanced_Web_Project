@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Musichord.Models;
 using Microsoft.AspNetCore.Authorization;
+using Musichord.Services;
+using Musichord.Models.Entities;
 
 namespace Musichord.Controllers;
 
@@ -9,15 +11,19 @@ namespace Musichord.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IUserRepository _userRepo;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IUserRepository userRepo)
     {
         _logger = logger;
+        _userRepo = userRepo;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        ApplicationUser? user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+        var tracks = user?.FavoriteTracks.Select(ft => ft.Track).ToList();
+        return View(tracks);
     }
 
     public IActionResult Privacy()

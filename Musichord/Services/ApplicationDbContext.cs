@@ -15,4 +15,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(modelBuilder);
     }
+
+    public DbSet<Track> Tracks => Set<Track>();
+    public DbSet<Artist> Artists => Set<Artist>();
+    public DbSet<Friendship> Friendships => Set<Friendship>();
+    public DbSet<FavoriteTrack> FavoriteTracks => Set<FavoriteTrack>();
 }

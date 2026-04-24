@@ -1,6 +1,6 @@
 'use strict'; 
 
-import { SpotifyPKCE } from "./spotifyPCKE.js";
+import { SpotifyPKCE } from "./spotifyPKCE.js";
 
 export class SpotifyAJAXRepository {
     #AUTHORIZE = "https://accounts.spotify.com/authorize";
