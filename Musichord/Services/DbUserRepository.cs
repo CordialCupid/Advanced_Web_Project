@@ -17,6 +17,9 @@ public class DbUserRepository : IUserRepository
 
     public async Task<ApplicationUser?> ReadByUsernameAsync(string username)
     {
-        return await _db.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        return await _db.Users
+        .Include(u => u.FavoriteTracks)
+            .ThenInclude(ft => ft.Track)
+        .FirstOrDefaultAsync(u => u.UserName == username);
     }
 }

@@ -1,5 +1,9 @@
-﻿@{
+﻿@model IEnumerable<Musichord.Models.Entities.Track>
+
+
+@{
     ViewData["Title"] = "Home Page";
+    
 }
 
 <div class="container">
@@ -8,7 +12,27 @@
         <p class="lead text-muted" style="text-decoration: underline">Here are your top 5 Spotify songs:</p>
     </div>
 </div>
+<button id="refreshFive">Refresh Top Five</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @foreach (var track in Model)
+    {
+        <tr>
+            <td>@track.Name</td>
+            <td>
+            </td>
+        </tr>
+    }
+</table>
 
- @section Scripts{
+
+@section Scripts{
     <script defer type="module" src="~/js/musichordIndex.js"></script>
 } 
