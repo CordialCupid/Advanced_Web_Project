@@ -664,9 +664,9 @@ ehthumbs.db
 Thumbs.db
 
 # Database
-*.db
-*.sqlite
-*.sqlite3
+# *.db
+# *.sqlite
+# *.sqlite3
 
 # Logs
 *.log
@@ -817,3 +817,5 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+Musichord/Data/Musichord.db-shm
+Musichord/Data/Musichord.db-wal

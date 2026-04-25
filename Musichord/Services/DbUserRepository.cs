@@ -22,4 +22,12 @@ public class DbUserRepository : IUserRepository
             .ThenInclude(ft => ft.Track)
         .FirstOrDefaultAsync(u => u.UserName == username);
     }
+
+    public async Task<ApplicationUser?> ReadByHandleAsync(string handle)
+    {
+        return await _db.Users
+        .Include(u => u.FavoriteTracks)
+            .ThenInclude(ft => ft.Track)
+        .FirstOrDefaultAsync(u => u.Handle == handle);
+    }
 }
