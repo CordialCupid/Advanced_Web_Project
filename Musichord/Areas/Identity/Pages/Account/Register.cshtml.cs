@@ -99,6 +99,10 @@ namespace Musichord.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required]
+            [Display(Name = "Handle")]
+            public string Handle { get; set; }
+
             [Display(Name = "Access Token")]
             public string SpotifyToken {get; set;}
         }
@@ -118,6 +122,7 @@ namespace Musichord.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.SpotifyToken = Input.SpotifyToken;
+                user.Handle = Input.Handle;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

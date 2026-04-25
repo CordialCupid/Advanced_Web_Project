@@ -14,6 +14,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ApplicationUser>()
+        .HasIndex(u => u.Handle)
+        .IsUnique();
     }
 
     public DbSet<Track> Tracks => Set<Track>();
