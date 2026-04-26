@@ -1,33 +1,33 @@
-﻿@model IEnumerable<Musichord.Models.Entities.Track>
+﻿@using Musichord.Models.Entities
+@model IEnumerable<string?>
 
 
 @{
     ViewData["Title"] = "Home Page";
-    
 }
 
 <div class="container">
     <div class="row">
         <h1 class="text-primary text-center">Welcome!</h1>
-        <p class="lead text-muted" style="text-decoration: underline">Here are your top 5 Spotify songs:</p>
+        <p class="lead text-muted" style="text-decoration: underline">Here are people!</p>
     </div>
 </div>
-<button id="refreshFive">Refresh Top Five</button>
 <table class="table">
     <thead>
         <tr>
             <th>
                 Name
             </th>
-            <th></th>
+            <th>
+                Add Friend
+            </th>
         </tr>
     </thead>
-    @foreach (var track in Model)
+    @foreach (var user in Model)
     {
         <tr>
-            <td>@track.Name</td>
-            <td>
-            </td>
+            <td>@user</td>
+            <td><button id="addFriendBtn" type="button" class="btn-primary" data-user-name="@user">Send Friend Request</button></td>     
         </tr>
     }
 </table>

@@ -48,6 +48,11 @@ public class ProfileController : Controller
         return View("Index", tracks);
     }
 
+    public async Task<IActionResult> Friends()
+    {
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();

@@ -30,4 +30,14 @@ public class DbUserRepository : IUserRepository
             .ThenInclude(ft => ft.Track)
         .FirstOrDefaultAsync(u => u.Handle == handle);
     }
+
+    public async Task<ICollection<ApplicationUser>> ReadAllAsync()
+    {
+        return await _db.Users.ToListAsync();
+    }
+
+    public async Task<ICollection<ApplicationUser>> ReadAllExceptAsync(string username)
+    {
+        return await _db.Users.Where(u => u.UserName != username).ToListAsync();
+    }
 }
