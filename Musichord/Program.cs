@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Musichord.Models.Entities;
 using Muschord.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IUserRepository, DbUserRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<ISpotifyRepo, SpotifyRepo>();
+builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 

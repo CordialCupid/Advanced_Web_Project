@@ -1,0 +1,30 @@
+@model IEnumerable<Musichord.Models.Entities.Track>
+
+
+@{
+    ViewData["Title"] = "Friends";
+    var isOwnProfile = ViewData["IsOwnProfile"] as bool? ?? false;
+}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-primary text-center">@ViewData["Handle"]'s Profile</h1>
+        @if (isOwnProfile)
+        {
+            <p class="lead text-muted" style="text-decoration: underline">Here are your current friends:</p>
+
+
+
+            <p class="lead text-muted" style="text-decoration: underline">Here are pending invites sent to you:</p>
+        }
+        else
+        {
+            <p class="lead text-muted" style="text-decoration: underline">Here are @ViewData["Handle"]'s favorite songs:</p>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+    <script defer type="module" src="~/js/musichordIndex.js"></script>
+} 
