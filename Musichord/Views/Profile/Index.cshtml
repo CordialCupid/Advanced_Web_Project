@@ -37,7 +37,7 @@
     @foreach (var track in Model)
     {
         <tr>
-            <td>@track.Name</td>
+            <td>@track.Name - @track.Artist?.Name</td>
             <td>
             </td>
         </tr>
