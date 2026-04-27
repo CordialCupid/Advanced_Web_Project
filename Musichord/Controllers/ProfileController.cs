@@ -25,6 +25,7 @@ public class ProfileController : Controller
         ApplicationUser? user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
         var tracks = user?.FavoriteTracks.Select(ft => ft.Track).ToList();
         ViewData["Handle"] = user?.Handle;
+        ViewData["ProfilePicture"] = user.ProfilePicture;
         ViewData["ProfileOwner"] = user;
         ViewData["IsOwnProfile"] = true;
         return View(tracks);
@@ -42,6 +43,7 @@ public class ProfileController : Controller
         
         var tracks = user.FavoriteTracks.Select(ft => ft.Track).ToList();
         ViewData["Handle"] = user.Handle;
+        ViewData["ProfilePicture"] = user.ProfilePicture;
         ViewData["ProfileOwner"] = user;
         ViewData["IsOwnProfile"] = User.Identity?.IsAuthenticated == true && 
                                 User.Identity.Name == user.UserName;

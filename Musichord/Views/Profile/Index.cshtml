@@ -8,7 +8,8 @@
 
 <div class="container">
     <div class="row">
-        <h1 class="text-primary text-center">@ViewData["Handle"]'s Profile</h1>
+        <img src="@ViewData["ProfilePicture"]" alt="Profile Picture" class="rounded-circle col-auto" style="width: 100px; height: 100%" />
+        <h1 class="text-primary col-auto">@ViewData["Handle"]'s Profile</h1>
         @if (isOwnProfile)
         {
             <p class="lead text-muted" style="text-decoration: underline">Here are your top 5 Spotify songs:</p>
