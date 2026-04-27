@@ -29,17 +29,31 @@
     <thead>
         <tr>
             <th>
+                #
+            </th>
+            <th>
+                -
+            </th>
+            <th>
                 Name
             </th>
-            <th></th>
+            <th>
+                Artist
+            </th>
+
         </tr>
     </thead>
+    @{int count = 0;}
     @foreach (var track in Model)
     {
+        count++;
         <tr>
-            <td>@track.Name - @track.Artist?.Name</td>
+            <td>@count</td>
             <td>
+                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
             </td>
+            <td>@track.Name </td>
+            <td>@track.Artist?.Name</td>
         </tr>
     }
 </table>
