@@ -105,6 +105,9 @@ namespace Musichord.Areas.Identity.Pages.Account
 
             [Display(Name = "Access Token")]
             public string SpotifyToken {get; set;}
+
+            [Display(Name = "Profile Picture URL")]
+            public string ProfilePicture { get; set; }
         }
 
 
@@ -123,6 +126,7 @@ namespace Musichord.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.SpotifyToken = Input.SpotifyToken;
                 user.Handle = Input.Handle;
+                user.ProfilePicture = Input.ProfilePicture;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

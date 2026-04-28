@@ -35,6 +35,8 @@ public class SpotifyController : ControllerBase
         List<FavoriteTrack> favs = new List<FavoriteTrack>();
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User!.Identity!.Name!);
         JsonDocument response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0&time_range=short_term");
+        System.Console.WriteLine("--------------------");
+        System.Console.WriteLine(response.ToString());
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
         List<Artist> artists = await DTOToArtist.MapToArtist(topFives!.Tracks);
         List<Track> tracks = await DTOToTrack.MapToTrack(topFives!.Tracks);

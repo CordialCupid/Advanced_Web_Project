@@ -8,4 +8,5 @@ public class ApplicationUser : IdentityUser
     // unique handle per user
     public string Handle { get; set; } = String.Empty;
     public ICollection<FavoriteTrack> FavoriteTracks {get;set;} = new List<FavoriteTrack>();
+    public string ProfilePicture { get; set; } = String.Empty;
 }

@@ -10,4 +10,6 @@ public record TrackDTO
     public required string TrackName {get;init;}
     [JsonPropertyName("artists")]
     public required List<ArtistDTO> Artists {get;init;}
+    [JsonPropertyName("album")]
+    public required AlbumDTO Album {get;init;}
 }

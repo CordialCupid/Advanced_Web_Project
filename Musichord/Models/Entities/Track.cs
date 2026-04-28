@@ -9,4 +9,5 @@ public class Track
     public string SpotifyId {get;set;} = String.Empty;
     public int ArtistId {get;set;}
     public Artist? Artist {get;set;}
+    public string ImageUrl {get;set;} = String.Empty;
 }
