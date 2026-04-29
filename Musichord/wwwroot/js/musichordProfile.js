@@ -25,4 +25,13 @@ async function setUpEventHandlers(friendRepo, spotRepo) {
             }          
         }
     });
+
+    document.addEventListener('click', async (e) => {
+        const refreshBtn = e.target.closest('#manageIdentity');
+        if (refreshBtn) {
+            e.preventDefault();
+            // Identity/Account/Manage
+            window.location.href = '/Identity/Account/Manage';   
+        }
+    });
 }
