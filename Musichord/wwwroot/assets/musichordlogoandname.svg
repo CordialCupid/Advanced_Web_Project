@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 449 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-38.9019,-804.652)">
+        <g id="Large-Logo" serif:id="Large Logo" transform="matrix(0.762538,0,0,0.215016,-861.385,804.796)">
+            <rect x="1180.64" y="-0.666" width="587.913" height="347.05" style="fill:none;"/>
+            <g transform="matrix(2.3841,0,0,8.45503,703.006,-7932.42)">
+                <g transform="matrix(40,0,0,40,441.566,972.287)">
+                </g>
+                <text x="279.566px" y="972.287px" style="font-family:'FSSplitSerif-Italic', 'FS Split Serif';font-style:italic;font-size:40px;">m<tspan x="307.886px 327.686px 342.566px 352.046px 369.006px 388.166px 407.526px 420.566px " y="972.287px 972.287px 972.287px 972.287px 972.287px 972.287px 972.287px 972.287px ">usichord</tspan></text>
+            </g>
+            <g id="Music-triad.svg" transform="matrix(1.46392e-16,-8.47867,2.39077,5.19169e-16,1269.29,171.672)">
+                <g transform="matrix(1,0,0,1,-100,-100)">
+                    <g>
+                        <g transform="matrix(1.29409,0,0,1.13679,-31.9731,-11.3446)">
+                            <ellipse cx="101.056" cy="76.665" rx="9.193" ry="9.789" style="fill:rgb(13,235,92);"/>
+                        </g>
+                        <g transform="matrix(1.26962,0,0,1.11218,-29.2237,14.6491)">
+                            <ellipse cx="101.056" cy="76.665" rx="9.193" ry="9.789" style="fill:rgb(13,235,92);"/>
+                        </g>
+                        <g transform="matrix(1.26962,0,0,1.11218,-28.9727,38.8083)">
+                            <ellipse cx="101.056" cy="76.665" rx="9.193" ry="9.789" style="fill:rgb(13,235,92);"/>
+                        </g>
+                        <path d="M98.6,64C108.3,64 119,67.3 119,76.2C119,85.3 106.7,88 98.8,88L100.9,86C105.4,86 107.9,83.4 107.9,78.2C107.9,70.8 102.4,65.9 97.5,65.9C91.9,65.9 91,70.4 91,73.5C91.1,81.9 97.4,86 100.9,86L98.8,88C92,88 79.9,85 80,75.8C80.1,66.9 91.1,63.9 98.6,64Z" style="fill-rule:nonzero;"/>
+                        <path d="M98.6,87.9C108.3,87.9 119,91.2 119,100.1C119,109.2 106.7,111.9 98.8,111.9L100.9,109.9C105.4,109.9 107.9,107.3 107.9,102.1C107.9,94.7 102.4,89.8 97.5,89.8C91.9,89.8 91,94.3 91,97.4C91.1,105.8 97.4,109.9 100.9,109.9L98.8,111.9C92,111.9 79.9,108.9 80,99.7C80.1,90.8 91.1,87.8 98.6,87.9Z" style="fill-rule:nonzero;"/>
+                        <path d="M98.6,111.9C108.3,111.9 119,115.2 119,124.1C119,133.2 106.7,135.9 98.8,135.9L100.9,133.9C105.4,133.9 107.9,131.3 107.9,126.1C107.9,118.7 102.4,113.8 97.5,113.8C91.9,113.8 91,118.3 91,121.4C91.1,129.8 97.4,133.9 100.9,133.9L98.8,135.9C92,135.9 79.9,132.9 80,123.7C80.1,114.8 91.1,111.8 98.6,111.9Z" style="fill-rule:nonzero;"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

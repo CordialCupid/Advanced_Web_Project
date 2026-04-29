@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 90 82" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-633,-517.186)">
+        <g id="Artboard2" transform="matrix(0.592603,0,0,0.722517,257.821,146.935)">
+            <rect x="633.103" y="512.446" width="151.789" height="113.416" style="fill:none;"/>
+            <g transform="matrix(-3.72233,0,0,4.52238,4012.22,-1507.29)">
+                <g transform="matrix(0.907105,-0.335364,0.401501,1.08599,764.692,409.951)">
+                    <ellipse cx="101.056" cy="76.665" rx="9.193" ry="9.789" style="fill:rgb(13,235,92);"/>
+                </g>
+                <g transform="matrix(1,0,0,1,787.951,359.193)">
+                    <path d="M98.6,87.9C108.3,87.9 119,91.2 119,100.1C119,109.2 106.7,111.9 98.8,111.9L100.9,109.9C105.4,109.9 107.9,107.3 107.9,102.1C107.9,94.7 102.4,89.8 97.5,89.8C91.9,89.8 91,94.3 91,97.4C91.1,105.8 97.4,109.9 100.9,109.9L98.8,111.9C92,111.9 79.9,108.9 80,99.7C80.1,90.8 91.1,87.8 98.6,87.9Z" style="fill:rgb(246,246,246);fill-rule:nonzero;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

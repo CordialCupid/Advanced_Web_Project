@@ -22,18 +22,27 @@ public class HomeController : Controller
         _friendRepo = friendRepo;
     }
 
+    [AllowAnonymous] // may have to remove with the friends stuff
     public async Task<IActionResult> Index()
     {    
+        
         List<Friendship> friendsList = new();
         var users = await _userRepo.ReadAllAsync();
         var relationships = await _friendRepo.GetAllFriendshipsAsync();
         if (User.Identity != null)
         {
+            
+            
             var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
             
             if (user != null)
-            {          
+            {
+                ViewData["LoggedIn"] = true;
+            } else
+            {
+                ViewData["LoggedIn"] = false;
             }
+
         }
         return View(friendsList);
     }
