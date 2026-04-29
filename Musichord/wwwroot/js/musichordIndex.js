@@ -27,3 +27,20 @@ async function setUpEventHandlers(friendRepo) {
         }
     });
 
+    document.addEventListener('click', async (e) => {
+        const friendBtn = e.target.closest('#addFriendBtn');
+        if (friendBtn) {
+            const name = friendBtn.getAttribute('data-user-name');
+            console.log(name);
+            await friendRepo.createFriendship(name);
+        }
+    });
+
+    document.addEventListener('click', async (e) => {
+        const refreshBtn = e.target.closest('#manageIdentity');
+        if (refreshBtn) {
+            e.preventDefault();
+            window.location.href = '/Identity/Account/Manage';
+        }
+    });
+}
