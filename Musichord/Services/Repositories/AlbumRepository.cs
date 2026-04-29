@@ -15,14 +15,17 @@ public class AlbumRepository : IAlbumRepository
     {
 
         foreach(Album album in albums)
-        {    
+        {
             var existing = await _db.Albums.FirstOrDefaultAsync(a => a.SpotifyId == album.SpotifyId);
             if (existing == null)
             {
-                _db.Albums.Add(album);  
+                _db.Albums.Add(album);
                 await _db.SaveChangesAsync();
-            }   
-            album.Id = existing!.Id;
+            }
+            else
+            {
+                album.Id = existing.Id;
+            }
         }
     }
 
