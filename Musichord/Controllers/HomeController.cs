@@ -24,6 +24,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {    
+        
         List<Friendship> friendsList = new();
         var users = await _userRepo.ReadAllAsync();
         var relationships = await _friendRepo.GetAllFriendshipsAsync();
@@ -34,6 +35,8 @@ public class HomeController : Controller
             if (user != null)
             {          
             }
+            ViewData["LoggedIn"] = true;
+
         }
         return View(friendsList);
     }
