@@ -18,6 +18,16 @@
     color: #000;
 }
 
+.dropdown-item-musichord-green {
+    color: var(--bs-musichord-green) !important;
+}
+
+.dropdown-item-musichord-green:hover,
+.dropdown-item-musichord-green:focus {
+    background-color: var(--bs-musichord-green) !important;
+    color: #000 !important;
+}
+
 html {
   font-size: 14px;
 }
@@ -70,3 +80,4 @@ body {
   padding: 0;
   /* margin: auto 0.5rem; */
 }
+

@@ -14,8 +14,9 @@
       @if (ViewData["LoggedIn"] as bool? == false)
       {
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button type="button" class="btn btn-musichord-green btn-lg px-4 gap-3">Sign Up</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Log In</button>
+
+            <a href="/Identity/Account/Register" class="btn btn-musichord-green btn-lg px-4 gap-3">Sign Up</a>
+            <a href="/Identity/Account/Login" class="btn btn-outline-secondary btn-lg px-4">Log In</a>
         </div>
       } else {
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
