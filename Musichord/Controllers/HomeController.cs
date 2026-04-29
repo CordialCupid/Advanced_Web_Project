@@ -43,7 +43,6 @@ public class HomeController : Controller
                 ViewData["LoggedIn"] = false;
             }
 
-
         }
         return View(friendsList);
     }
