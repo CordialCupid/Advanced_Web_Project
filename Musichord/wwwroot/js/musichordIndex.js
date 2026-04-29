@@ -9,7 +9,6 @@ async function main() {
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
     await getRecentlyPlayed(spotRepo);
     await getTopFive(spotRepo);
-    await setUpEventHandlers(friendRepo);
 }
 
 async function getRecentlyPlayed(spotRepo) {

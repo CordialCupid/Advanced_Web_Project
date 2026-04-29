@@ -16,17 +16,21 @@ public class SpotifyController : ControllerBase
 {
     private readonly ITrackRepository _trackRepo;
     private readonly IArtistRepository _artistRepo;
+    private readonly IListenRecordRepository _recordRepo;
+    private readonly IAlbumRepository _albumRepo;
     private readonly ISpotifyRepo _spotRepo;
     private readonly IUserRepository _userRepo;
     private readonly ApplicationDbContext _db;
 
-    public SpotifyController(ITrackRepository trackRepo, IArtistRepository artistRepo, ISpotifyRepo spotRepo, IUserRepository userRepo, ApplicationDbContext db)
+    public SpotifyController(ITrackRepository trackRepo, IArtistRepository artistRepo, ISpotifyRepo spotRepo, IUserRepository userRepo, ApplicationDbContext db, IAlbumRepository albumRepo, IListenRecordRepository recordRepo)
     {
         _trackRepo = trackRepo;
         _artistRepo = artistRepo;
         _spotRepo = spotRepo;
         _userRepo = userRepo;
         _db = db;
+        _albumRepo = albumRepo;
+        _recordRepo = recordRepo;
     }
 
     [HttpGet("topfive/{accessToken}")]
@@ -38,12 +42,20 @@ public class SpotifyController : ControllerBase
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
         List<Artist> artists = await DTOToArtist.MapToArtist(topFives!.Tracks);
         List<Track> tracks = await DTOToTrack.MapToTrack(topFives!.Tracks);
+        List<Album> albums = DTOToAlbum.MapToAlbum(topFives.Tracks);
 
         await _artistRepo.CreateArtistsAsync(artists);
+        for (int i = 0; i < albums.Count(); i++)
+        {
+            albums[i].ArtistId = artists[i].Id;
+        }
+        
+        await _albumRepo.CreateAlbumsAsync(albums);
 
         for (int i = 0; i < topFives.Tracks.Count(); i++)
         {
             tracks[i].ArtistId = artists[i].Id;
+            tracks[i].AlbumId = albums[i].Id;   
         }
 
         List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
@@ -73,14 +85,22 @@ public class SpotifyController : ControllerBase
         RecentDTO? recentDTo = JsonSerializer.Deserialize<RecentDTO>(response);
         List<TrackDTO?> rippedTracks = await DTOToRecent.MapToRecent(recentDTo.Tracks) ?? new();
         List<Artist> artists = await DTOToArtist.MapToArtist(rippedTracks);
-        List<Track> tracks = await DTOToTrack.MapToTrack(rippedTracks);   
+        List<Track> tracks = await DTOToTrack.MapToTrack(rippedTracks);  
+        List<Album> albums = DTOToAlbum.MapToAlbum(rippedTracks); 
         
 
         await _artistRepo.CreateArtistsAsync(artists);
+        for (int i = 0; i < albums.Count(); i++)
+        {
+            albums[i].ArtistId = artists[i].Id;
+        }
+        
+        await _albumRepo.CreateAlbumsAsync(albums);
 
         for (int i = 0; i < rippedTracks.Count(); i++)
         {
             tracks[i].ArtistId = artists[i].Id;
+            tracks[i].AlbumId = albums[i].Id;  
         }
 
         List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
@@ -94,10 +114,8 @@ public class SpotifyController : ControllerBase
             UserId = currentUser!.Id
         }).ToList();
 
-        await _db.ListenRecords.AddRangeAsync(recents);
-        await _db.SaveChangesAsync();
+        await _recordRepo.CreateListenRecordsAsync(recents);
 
-        
         return Ok();
     }
 }

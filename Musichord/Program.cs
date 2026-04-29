@@ -33,6 +33,8 @@ builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<ISpotifyRepo, SpotifyRepo>();
 builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
+builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
+builder.Services.AddScoped<IListenRecordRepository, ListenRecordRepository>();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 
