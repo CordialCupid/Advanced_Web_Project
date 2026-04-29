@@ -11,8 +11,8 @@ using Musichord.Services;
 namespace Musichord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260425062153_AddUniqueHandleToApplicationUser")]
-    partial class AddUniqueHandleToApplicationUser
+    [Migration("20260429082752_mig24")]
+    partial class mig24
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,6 +152,30 @@ namespace Musichord.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SpotifyId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.ToTable("Albums");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -198,7 +222,19 @@ namespace Musichord.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SpotEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SpotUser")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SpotifyToken")
@@ -278,7 +314,15 @@ namespace Musichord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ReceiverHandle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SenderHandle")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -299,14 +343,73 @@ namespace Musichord.Migrations
                     b.ToTable("Friendships");
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.ListenRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TrackId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("TrackId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ListenRecords");
+                });
+
+            modelBuilder.Entity("Musichord.Models.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AlbumId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.Track", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AlbumId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ArtistId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -317,6 +420,8 @@ namespace Musichord.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
 
                     b.HasIndex("ArtistId");
 
@@ -377,6 +482,17 @@ namespace Musichord.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
+                {
+                    b.HasOne("Musichord.Models.Entities.Artist", "Creator")
+                        .WithMany()
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.FavoriteTrack", b =>
                 {
                     b.HasOne("Musichord.Models.Entities.Track", "Track")
@@ -415,25 +531,87 @@ namespace Musichord.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.ListenRecord", b =>
+                {
+                    b.HasOne("Musichord.Models.Entities.Track", "Track")
+                        .WithMany("Records")
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Musichord.Models.Entities.ApplicationUser", "User")
+                        .WithMany("Records")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Track");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Musichord.Models.Entities.Review", b =>
+                {
+                    b.HasOne("Musichord.Models.Entities.Album", "AlbumReview")
+                        .WithMany("Reviews")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Musichord.Models.Entities.ApplicationUser", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AlbumReview");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.Track", b =>
                 {
+                    b.HasOne("Musichord.Models.Entities.Album", "Album")
+                        .WithMany("Tracks")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Musichord.Models.Entities.Artist", "Artist")
                         .WithMany("Tracks")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Album");
+
                     b.Navigation("Artist");
+                });
+
+            modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tracks");
                 });
 
             modelBuilder.Entity("Musichord.Models.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("FavoriteTracks");
+
+                    b.Navigation("Records");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Musichord.Models.Entities.Artist", b =>
                 {
                     b.Navigation("Tracks");
+                });
+
+            modelBuilder.Entity("Musichord.Models.Entities.Track", b =>
+                {
+                    b.Navigation("Records");
                 });
 #pragma warning restore 612, 618
         }

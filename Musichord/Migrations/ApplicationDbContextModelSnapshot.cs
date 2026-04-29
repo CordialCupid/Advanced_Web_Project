@@ -162,6 +162,10 @@ namespace Musichord.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SpotifyId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ArtistId");
@@ -394,6 +398,9 @@ namespace Musichord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AlbumId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ArtistId")
                         .HasColumnType("INTEGER");
 
@@ -410,6 +417,8 @@ namespace Musichord.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
 
                     b.HasIndex("ArtistId");
 
@@ -559,11 +568,19 @@ namespace Musichord.Migrations
 
             modelBuilder.Entity("Musichord.Models.Entities.Track", b =>
                 {
+                    b.HasOne("Musichord.Models.Entities.Album", "Album")
+                        .WithMany("Tracks")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Musichord.Models.Entities.Artist", "Artist")
                         .WithMany("Tracks")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Album");
 
                     b.Navigation("Artist");
                 });
@@ -571,6 +588,8 @@ namespace Musichord.Migrations
             modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
                 {
                     b.Navigation("Reviews");
+
+                    b.Navigation("Tracks");
                 });
 
             modelBuilder.Entity("Musichord.Models.Entities.ApplicationUser", b =>

@@ -10,5 +10,7 @@ public class Track
     public int ArtistId {get;set;}
     public Artist? Artist {get;set;}
     public string ImageUrl {get;set;} = String.Empty;
+    public Album? Album {get;set;}
+    public int AlbumId {get;set;}
     public ICollection<ListenRecord> Records {get;set;} = new List<ListenRecord>();
 }
