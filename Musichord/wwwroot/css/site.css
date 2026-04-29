@@ -80,3 +80,14 @@ body {
   padding: 0;
   /* margin: auto 0.5rem; */
 }
+
+
+.friends-col-1 {
+    width: 40%;
+}
+.friends-col-2 {
+    width: 30%;
+}
+.friends-col-3 {
+    width: 30%;
+}

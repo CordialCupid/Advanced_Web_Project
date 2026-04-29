@@ -6,6 +6,8 @@ using Musichord.Services;
 using Musichord.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Build.Tasks;
+using Musichord.Models.ViewModels;
 
 namespace Musichord.Controllers;
 
@@ -73,16 +75,25 @@ public class HomeController : Controller
         {
             var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name!);
             
-            if (user != null)
+            var model = new FriendsViewModel()
             {
-                var friends = await _friendRepo.GetAllFriendshipsAsync();
-                var friendsList1 = friends.Where(f => f.SenderHandle == user.Handle && f.Status == "Accepted").Select(f => f.ReceiverHandle).ToList();      
-                var friendsList2 = friends.Where(f => f.ReceiverHandle == user.Handle && f.Status == "Accepted").Select(f => f.SenderHandle).ToList();    
-                friendsList = friendsList1.Concat(friendsList2).ToList();
-            }
+                Friends = new List<string>(),
+                FriendRequests = new List<string>()
+            };
+            var friends = await _friendRepo.GetAllFriendshipsAsync();
+            var friendsList1 = friends.Where(f => f.SenderHandle == user.Handle && f.Status == "Accepted").Select(f => f.ReceiverHandle).ToList();      
+            var friendsList2 = friends.Where(f => f.ReceiverHandle == user.Handle && f.Status == "Accepted").Select(f => f.SenderHandle).ToList();    
+            model.Friends = friendsList1.Concat(friendsList2).ToList();
+            model.FriendRequests = (await _friendRepo.GetAllFriendshipsAsync())
+                                        .Where(f => f.ReceiverHandle == user.Handle && f.Status == "Pending")
+                                    .Select(f => f.SenderHandle)
+                                    .ToList();
+            return View(model);
         }
-        return View(friendsList);
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        
     }
+    
 
     public IActionResult Privacy()
     {

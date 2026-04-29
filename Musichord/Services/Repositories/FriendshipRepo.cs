@@ -73,16 +73,13 @@ public class FriendshipRepo : IFriendshipRepo
         }
     }
 
-    public async Task UpdateFriendshipStatus(string currentHandle, string senderHandle)
+    public async Task UpdateFriendshipStatus(string senderHandle, string receiverHandle)
     {
-        if (currentHandle != null && senderHandle != null)
+        Friendship? toUpdate = await ReadAsync(senderHandle, receiverHandle);
+        if (toUpdate != null)
         {
-            Friendship? toUpdate = await ReadAsync(senderHandle, currentHandle);
-            if (toUpdate != null)
-            {
-                toUpdate.Status = "Accepted";
-                await _db.SaveChangesAsync();
-            }
+            toUpdate.Status = "Accepted";
+            await _db.SaveChangesAsync();
         }
     }
 }
