@@ -10,7 +10,7 @@
 <div class="container">
     <div class="row">
         <img src="@ViewData["ProfilePicture"]" alt="Profile Picture" class="rounded-circle col-auto" style="width: 100px; height: 100%" />
-        <h1 class="text-primary col-auto">@ViewData["Handle"]'s Profile</h1>
+        <h1 class="text-musichord-green col-auto">@ViewData["Handle"]'s Profile</h1>
         @if (isOwnProfile)
         {
             <p class="lead text-muted" style="text-decoration: underline">Here are your top 5 Spotify songs:</p>
@@ -24,7 +24,7 @@
 
 @if (isOwnProfile)
 {
-    <button id="refreshFive">Refresh Top Five</button>
+    <button id="refreshFive" class="btn btn-musichord-green">Refresh Top Five</button>
 }
 
 <table class="table">
