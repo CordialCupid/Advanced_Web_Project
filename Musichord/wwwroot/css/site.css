@@ -1,3 +1,21 @@
+:root {
+    --bs-musichord-green: #0deb5c;
+    --bs-musichord-green-rgb: 13, 235, 92;
+}
+
+.text-musichord-green { color: var(--bs-musichord-green) !important; }
+.bg-musichord-green { background-color: var(--bs-musichord-green) !important; }
+.border-musichord-green { border-color: var(--bs-musichord-green) !important; }
+.btn-musichord-green {
+    background-color: var(--bs-musichord-green);
+    color: #000;
+    border: none;
+}
+.btn-musichord-green:hover {
+    background-color: #0bc44d;
+    color: #000;
+}
+
 html {
   font-size: 14px;
 }
