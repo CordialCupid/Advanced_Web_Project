@@ -22,6 +22,7 @@ public class AlbumRepository : IAlbumRepository
                 _db.Albums.Add(album);  
                 await _db.SaveChangesAsync();
             }   
+            album.Id = existing!.Id;
         }
     }
 
