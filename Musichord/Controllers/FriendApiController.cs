@@ -20,15 +20,37 @@ public class FriendApiController : ControllerBase
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {
-        var userRequested = await _userRepo.ReadByUsernameAsync(username);
+        var userRequested = await _userRepo.ReadByHandleAsync(username);
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
 
         if (userRequested != null && currentUser != null)
         {
-            GlobalFriendGraph.AddEdge(currentUser.Id, userRequested.Id );
             var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
             return CreatedAtAction("Get", new {Id = newShip.Id}, newShip);          
         }
         throw new ArgumentException("Users being friended must both not be null");
     }
+    
+    // [HttpPut("updatestatus/{username}")]
+    // public async Task<IActionResult> Put(string username)
+    // {
+    //     var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+    //     if (username != null && currentUser != null)
+    //     {
+    //         var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+    //         return NoContent();          
+    //     }
+    //     throw new ArgumentException("Users being friended must both not be null");
+    // }
+
+    // [HttpDelete("removefriend/{username}")]
+    // public async Task<IActionResult> Delete(string username)
+    // {
+    //     var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+    //     if (username != null && currentUser != null)
+    //     {
+    //         var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+    //         return NoContent();          
+    //     }
+    // }
 }

@@ -1,0 +1,50 @@
+@using Musichord.Models.Entities
+@model IEnumerable<string>
+
+
+@{
+    ViewData["Title"] = "Friends";
+    var isOwnProfile = ViewData["IsOwnProfile"] as bool? ?? false;
+
+    @* if (ViewData["Received"] != null)
+    {
+        List<string?> received = (List<string?>)ViewData["Received"]!;
+    } *@
+}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-primary text-center">@ViewData["Handle"]'s Profile</h1>
+        @if (!isOwnProfile)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Details
+                        </th>
+                    </tr>
+                </thead>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user</td>
+                        <td><button id="viewFriendBtn" type="button" class="btn-primary" data-user-name="@user">View Profile</button></td>     
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p class="lead text-muted" style="text-decoration: underline">Here are @ViewData["Handle"]'s favorite songs:</p>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+    <script defer type="module" src="~/js/musichordIndex.js"></script>
+} 

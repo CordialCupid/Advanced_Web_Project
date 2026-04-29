@@ -21,6 +21,8 @@ public class DbUserRepository : IUserRepository
         .Include(u => u.FavoriteTracks)
             .ThenInclude(ft => ft.Track)
                 .ThenInclude(t => t.Artist)
+        .Include(r => r.Records)
+        .Include(r => r.Reviews)
         .FirstOrDefaultAsync(u => u.UserName == username);
     }
 
@@ -30,6 +32,8 @@ public class DbUserRepository : IUserRepository
         .Include(u => u.FavoriteTracks)
             .ThenInclude(ft => ft.Track)
                 .ThenInclude(t => t.Artist)
+        .Include(r => r.Records)
+        .Include(r => r.Reviews)
         .FirstOrDefaultAsync(u => u.Handle == handle);
     }
 
@@ -41,5 +45,10 @@ public class DbUserRepository : IUserRepository
     public async Task<ICollection<ApplicationUser>> ReadAllExceptAsync(string username)
     {
         return await _db.Users.Where(u => u.UserName != username).ToListAsync();
+    }
+
+    public async Task<ICollection<string>>ReadAllHandlesExceptUserAsync(string user)
+    {
+        return await _db.Users.Where(u => u.Handle != user).Select(u => u.Handle).ToListAsync();
     }
 }

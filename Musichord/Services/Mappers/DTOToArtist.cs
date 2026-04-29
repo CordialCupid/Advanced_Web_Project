@@ -5,11 +5,15 @@ namespace Musichord.Services.Mappers;
 
 public class DTOToArtist
 {
-    public static async Task<List<Artist>> MapToArtist(List<TrackDTO> tracksdto)
+    public static async Task<List<Artist>> MapToArtist(List<TrackDTO?> tracksdto)
     {
         List<Artist> artistsToReturn = new List<Artist>();
-        foreach (TrackDTO trackDTO in tracksdto)
+        foreach (TrackDTO? trackDTO in tracksdto)
         {
+            if (trackDTO == null)
+            {
+                continue;
+            }
             Artist artistModel = new Artist
             {
                 Id = 0,

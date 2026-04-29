@@ -16,16 +16,14 @@ async function main() {
         await spotRepo.retrieveAccessToken(code)
             .then(async function() {
                 const accessToken = localStorage.getItem('access_token');
-                const spotResponse = await spotRepo.callSpotAPI('GET', '/v1/me', accessToken);             
-                document.getElementById('spotUser').value = spotResponse.display_name;
-                document.getElementById('spotEmail').value = spotResponse.email;
+                const spotResponse = await spotRepo.callSpotAPI('GET', '/v1/me', accessToken);          
+                document.querySelector('.spotify-user').value = spotResponse.display_name;
+                document.querySelector('.spotify-email').value = spotResponse.email;
                 const profilePicInp = document.querySelector('.profile-picture');
                 const profilePicUrl = spotResponse.images && spotResponse.images.length > 0 ? spotResponse.images[0].url : '';
                 profilePicInp.value = profilePicUrl;
                 const tokenInp = document.querySelector('.spotify-token');
                 tokenInp.value = accessToken;
-                addBtn.disabled = true;
-                registerBtn.disabled = false;
             })
             .catch (error => {
                 console.log(error);

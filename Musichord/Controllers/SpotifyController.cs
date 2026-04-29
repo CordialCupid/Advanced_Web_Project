@@ -30,13 +30,11 @@ public class SpotifyController : ControllerBase
     }
 
     [HttpGet("topfive/{accessToken}")]
-    public async Task<IActionResult> Get(string accessToken)
+    public async Task<IActionResult> GetFive(string accessToken)
     {   
         List<FavoriteTrack> favs = new List<FavoriteTrack>();
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User!.Identity!.Name!);
-        JsonDocument response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0&time_range=short_term");
-        System.Console.WriteLine("--------------------");
-        System.Console.WriteLine(response.ToString());
+        string response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0&time_range=short_term");
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
         List<Artist> artists = await DTOToArtist.MapToArtist(topFives!.Tracks);
         List<Track> tracks = await DTOToTrack.MapToTrack(topFives!.Tracks);
@@ -60,6 +58,43 @@ public class SpotifyController : ControllerBase
         }).ToList();
 
         await _db.FavoriteTracks.AddRangeAsync(favs);
+        await _db.SaveChangesAsync();
+
+        
+        return Ok();
+    }
+
+    [HttpGet("recently-played/{accessToken}")]
+    public async Task<IActionResult> GetRecent(string accessToken)
+    {   
+        List<ListenRecord> recents = new List<ListenRecord>();
+        ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User!.Identity!.Name!);
+        string response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=2");
+        RecentDTO? recentDTo = JsonSerializer.Deserialize<RecentDTO>(response);
+        List<TrackDTO?> rippedTracks = await DTOToRecent.MapToRecent(recentDTo.Tracks) ?? new();
+        List<Artist> artists = await DTOToArtist.MapToArtist(rippedTracks);
+        List<Track> tracks = await DTOToTrack.MapToTrack(rippedTracks);   
+        
+
+        await _artistRepo.CreateArtistsAsync(artists);
+
+        for (int i = 0; i < rippedTracks.Count(); i++)
+        {
+            tracks[i].ArtistId = artists[i].Id;
+        }
+
+        List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
+
+        await _db.ListenRecords.Where(ft => ft.UserId == currentUser!.Id).ExecuteDeleteAsync();
+
+        recents = newTracks.Select(t => new ListenRecord
+        {
+            Id = 0,
+            TrackId = t.Id,
+            UserId = currentUser!.Id
+        }).ToList();
+
+        await _db.ListenRecords.AddRangeAsync(recents);
         await _db.SaveChangesAsync();
 
         

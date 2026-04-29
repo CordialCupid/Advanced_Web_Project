@@ -10,4 +10,5 @@ public interface IUserRepository
 
     Task<ICollection<ApplicationUser>> ReadAllAsync();
     Task<ICollection<ApplicationUser>> ReadAllExceptAsync(string id);
+    Task<ICollection<string>> ReadAllHandlesExceptUserAsync(string user);
 }

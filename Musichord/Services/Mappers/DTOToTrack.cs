@@ -5,10 +5,10 @@ namespace Musichord.Services.Mappers;
 
 public class DTOToTrack
 {
-    public static async Task<List<Track>> MapToTrack(List<TrackDTO> trackdto)
+    public static async Task<List<Track>> MapToTrack(List<TrackDTO?> trackdto)
     {
         List<Track> tracks = new List<Track>();
-        foreach (TrackDTO tdto in trackdto)
+        foreach (TrackDTO? tdto in trackdto)
         {
             // TODO: Extract the image URL from the album images array
             // Step 1: Check if tdto.Album and tdto.Album.Images exist (they might be null)
@@ -23,7 +23,7 @@ public class DTOToTrack
             string imageUrl = string.Empty; // Default to empty string if no images are available
 
 
-            if (tdto.Album?.Images != null && tdto.Album.Images.Count > 0)
+            if (tdto?.Album?.Images != null && tdto.Album.Images.Count > 0)
             {
                 // Find the smallest image (best for performance)
                 var smallestImage = tdto.Album.Images.OrderBy(img => img.Height ?? int.MaxValue).FirstOrDefault();
