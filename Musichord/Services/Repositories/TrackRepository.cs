@@ -29,11 +29,15 @@ public class TrackRepository : ITrackRepository
 
     public async Task<Track?> ReadTrackAsync(int id)
     {
-        return await _db.Tracks.FindAsync(id);
+        return await _db.Tracks
+                        .Include(t => t.Artist)
+                        .FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<Track?> ReadTrackBySpotifyIdAsync(string spotId)
     {
-        return await _db.Tracks.FirstOrDefaultAsync(t => t.SpotifyId == spotId);
+        return await _db.Tracks
+                        .Include(t => t.Artist)
+                        .FirstOrDefaultAsync(t => t.SpotifyId == spotId);
     }
 }

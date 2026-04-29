@@ -6,5 +6,5 @@ namespace Muschord.Services;
 
 public interface ISpotifyRepo
 {
-    Task<JsonDocument> GetRequest(string accessToken, string uri);
+    Task<String> GetRequest(string accessToken, string uri);
 }

@@ -107,7 +107,15 @@ namespace Musichord.Areas.Identity.Pages.Account
             public string SpotifyToken {get; set;}
 
             [Display(Name = "Profile Picture URL")]
-            public string ProfilePicture { get; set; }
+            public string ProfilePicture { get; set; } 
+
+            [Required]
+            [Display(Name = "Spotify Email")]
+            public string SpotEmail { get; set; }
+
+            [Required]
+            [Display(Name = "Spotify Username")]
+            public string SpotUser {get;set;}
         }
 
 
@@ -126,7 +134,16 @@ namespace Musichord.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.SpotifyToken = Input.SpotifyToken;
                 user.Handle = Input.Handle;
-                user.ProfilePicture = Input.ProfilePicture;
+                if (!String.IsNullOrEmpty(Input.ProfilePicture))
+                {
+                    user.ProfilePicture = Input.ProfilePicture;         
+                }
+                else
+                {
+                    user.ProfilePicture = "/assets/missing.png";
+                }
+                user.SpotEmail = Input.SpotEmail;
+                user.SpotUser = Input.SpotUser;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

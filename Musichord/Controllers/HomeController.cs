@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Musichord.Services;
 using Musichord.Models.Entities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Musichord.Controllers;
 
@@ -22,15 +23,56 @@ public class HomeController : Controller
     }
 
     public async Task<IActionResult> Index()
-    {
+    {    
+        List<Friendship> friendsList = new();
         var users = await _userRepo.ReadAllAsync();
         var relationships = await _friendRepo.GetAllFriendshipsAsync();
-        var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
-        var exceptUser = await _userRepo.ReadAllExceptAsync(User.Identity!.Name!);
-        
-        await GlobalFriendGraph.GraphInit(users, relationships);
-        var nons = await GlobalFriendGraph.GetNonFriends(user!.Id, exceptUser);
-        return View(nons);
+        if (User.Identity != null)
+        {
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+            
+            if (user != null)
+            {          
+            }
+        }
+        return View(friendsList);
+    }
+
+    public async Task<IActionResult> Explore()
+    {
+        List<string> friendsList = new();
+        if (User.Identity != null)
+        {
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+            
+            
+            if (user != null)
+            {
+                var exceptUser = await _userRepo.ReadAllHandlesExceptUserAsync(user.Handle);
+                var friends = await _friendRepo.GetAllFriendsHandlesAsync(user.Handle);
+                friendsList = exceptUser.Except(friends).ToList();
+            }
+        }
+
+        return View(friendsList);
+    }
+
+    public async Task<IActionResult> Friends()
+    {
+        List<string> friendsList = new();
+        if (User.Identity != null)
+        {
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name!);
+            
+            if (user != null)
+            {
+                var friends = await _friendRepo.GetAllFriendshipsAsync();
+                var friendsList1 = friends.Where(f => f.SenderHandle == user.Handle && f.Status == "Accepted").Select(f => f.ReceiverHandle).ToList();      
+                var friendsList2 = friends.Where(f => f.ReceiverHandle == user.Handle && f.Status == "Accepted").Select(f => f.SenderHandle).ToList();    
+                friendsList = friendsList1.Concat(friendsList2).ToList();
+            }
+        }
+        return View(friendsList);
     }
 
     public IActionResult Privacy()

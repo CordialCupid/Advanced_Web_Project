@@ -24,4 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Artist> Artists => Set<Artist>();
     public DbSet<Friendship> Friendships => Set<Friendship>();
     public DbSet<FavoriteTrack> FavoriteTracks => Set<FavoriteTrack>();
+    public DbSet<ListenRecord> ListenRecords => Set<ListenRecord>();
+    public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<Album> Albums => Set<Album>();
 }

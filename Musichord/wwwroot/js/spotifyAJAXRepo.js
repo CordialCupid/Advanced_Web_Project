@@ -4,7 +4,7 @@ import { SpotifyPKCE } from "./spotifyPKCE.js";
 
 export class SpotifyAJAXRepository {
     #AUTHORIZE = "https://accounts.spotify.com/authorize";
-    #scopes = "user-read-private user-top-read user-read-email user-library-modify playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative";
+    #scopes = "user-read-private user-read-recently-played user-top-read user-read-email user-library-modify playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative";
     #clientId = "ad61ff7774e443b99cf8123f95809301";
     #redirectURI = "http://127.0.0.1:5097/Identity/Account/Register";
     #baseAddress = 'https://api.spotify.com/v1/';

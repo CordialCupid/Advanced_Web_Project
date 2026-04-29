@@ -28,11 +28,15 @@ public class ArtistRepository : IArtistRepository
 
     public async Task<Artist?> ReadArtistAsync(int id)
     {
-        return await _db.Artists.FindAsync(id);
+        return await _db.Artists
+                        .Include(t => t.Tracks)
+                        .FirstOrDefaultAsync(a => a.Id == id);
     }
 
     public async Task<Artist?> ReadArtistByNameAsync(string name)
     {
-        return await _db.Artists.FirstOrDefaultAsync(a => a.Name == name);
+        return await _db.Artists
+                        .Include(t => t.Tracks)
+                        .FirstOrDefaultAsync(a => a.Name == name);
     }
 }
