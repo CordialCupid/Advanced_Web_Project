@@ -26,7 +26,7 @@ public class DTOToTrack
             if (tdto?.Album?.Images != null && tdto.Album.Images.Count > 0)
             {
                 // Find the smallest image (best for performance)
-                var smallestImage = tdto.Album.Images.OrderBy(img => img.Height ?? int.MaxValue).FirstOrDefault();
+                var smallestImage = tdto.Album.Images.OrderBy(img => img.Height ?? int.MaxValue).LastOrDefault();
                 imageUrl = smallestImage?.Url; // Extract the URL from the selected image
             }
 

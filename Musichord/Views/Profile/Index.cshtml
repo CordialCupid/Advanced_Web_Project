@@ -7,27 +7,139 @@
     var isOwnProfile = ViewData["IsOwnProfile"] as bool? ?? false;
 }
 
-<div class="container">
-    <div class="row">
-        <img src="@ViewData["ProfilePicture"]" alt="Profile Picture" class="rounded-circle col-auto" style="width: 100px; height: 100%" />
-        <h1 class="text-musichord-green col-auto">@ViewData["Handle"]'s Profile</h1>
+<div class="container border-bottom border-secondary">
+    <div class="row mb-3 align-items-center">
+        <img src="@ViewData["ProfilePicture"]" alt="Profile Picture" class="rounded-circle col-auto profile-picture" />
+        <h1 class="text-musichord-green col-auto profile-title">@ViewData["Handle"]'s Profile</h1>
         @if (isOwnProfile)
         {
-            <p class="lead text-muted" style="text-decoration: underline">Here are your top 5 Spotify songs:</p>
-        }
-        else
-        {
-            <p class="lead text-muted" style="text-decoration: underline">Here are @ViewData["Handle"]'s favorite songs:</p>
+            <div class="col-auto ms-auto d-flex gap-2">
+                <button id="refreshFive" class="btn btn-musichord-green col-auto ms-auto profile-button"><i class="bi bi-arrow-clockwise"></i></button>
+                @* href="/Identity/Account/Manage" *@
+                <button id="manageIdentity" class="btn btn-musichord-green col-auto profile-button"><i class="bi bi-gear-fill"></i> [Broken]</button>
+            </div>
+
         }
     </div>
 </div>
 
-@if (isOwnProfile)
-{
-    <button id="refreshFive" class="btn btn-musichord-green">Refresh Top Five</button>
-}
 
-<table class="table">
+<div class="container">
+    <div class="row">
+
+        @if (isOwnProfile)
+        {
+            <h2 class="text-light text-center mt-4 mb-3">Your Top 5 From The Past Month:</h2>
+        }
+        else
+        {
+            <h2 class="text-light text-center mt-4 mb-3">@ViewData["Handle"]'s Top 5 From The Past Month:</h2>
+        }
+
+    </div>
+
+
+
+    @{int count = 0;}
+
+    <div class="row align-items-stretch">
+        @if (!Model.Any())
+        {
+            <h3 class="text-muted text-center">No favorite tracks found. Please use the refresh button on your profile!</h3>
+
+        }
+        
+        @for (var x = 0; x < 5; x++)
+        {
+            
+
+            var track = Model.ElementAt(x);
+            @* <div class="col" align="center">
+                <p>@(x + 1)</p>
+                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <p>@track.Name</p>
+                <p>@track.Artist?.Name</p>
+            </div> *@
+
+            <div class="col top-five-col">
+                <div class="card top-five-card h-100">
+                    <img src="@track.ImageUrl" class="card-img-top" alt="Album Art">
+                    <span class="position-absolute top-0 start-0 m-2 badge bg-musichord-green text-dark">
+                        @(x+1)
+                    </span>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title card-track-title">@track.Name</h5>
+                        <p class="card-text mt-auto">@track.Artist?.Name</p>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (isOwnProfile) {
+            <h3 class="text-light text-center mt-5">Your Other Liked Songs:</h3>
+        } else {
+            <h3 class="text-light text-center mt-5">@ViewData["Handle"]'s Other Liked Songs:</h3>
+        }
+        @* <h3>Your other liked tracks :D</h3> *@
+        <table class="table">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Artist
+            </th>
+
+        </tr>
+    </thead>
+        @for (var x = 5; x < Model.Count(); x++)
+        {
+            var track = Model.ElementAt(x);
+        <tr>
+            <td class="align-middle">
+                <span class="badge bg-musichord-green text-dark">
+                    @(x+1)
+                </span>
+            </td>
+            <td class="align-middle">
+                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+            </td>
+            <td class="align-middle">@track.Name </td>
+            <td class="align-middle">@track.Artist?.Name</td>
+        </tr>
+        }
+        </table>
+    </div>
+
+
+    @* <div class="row align-items-center">
+        @{int topfivecount = 0; }
+        @foreach (var track in Model)
+        {
+            topfivecount++;
+            <div class="col" align="center">
+                <p>@topfivecount</p>
+                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <p>@track.Name</p>
+                <p>@track.Artist?.Name</p>
+            </div>
+            
+            if (topfivecount == 5)
+            {
+                break;
+            }
+        }
+    </div> *@
+</div>
+
+
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -58,7 +170,7 @@
             <td>@track.Artist?.Name</td>
         </tr>
     }
-</table>
+</table> *@
 
 
 @section Scripts{
