@@ -1,5 +1,6 @@
 using Musichord.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace Musichord.Services;
 
@@ -56,13 +57,6 @@ public class TrackRepository : ITrackRepository
                         .FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    // public async Task<Track?> ReadTrackBySpotifyIdAsync(string spotId)
-    // {
-    //     return await _db.Tracks
-    //                     .Include(t => t.Artist)
-    //                     .FirstOrDefaultAsync(t => t.SpotifyId == spotId);
-    // }
-
     // LISTEN RECORD (RECENTLY PLAYED) METHODS
 
     public async Task CreateRecord(ListenRecord record)
@@ -71,15 +65,12 @@ public class TrackRepository : ITrackRepository
         await _db.SaveChangesAsync();
     }
 
-    // public async Task<ListenRecord?> GetRecordAsync(int id)
-    // {
-    //     return await _db.ListenRecords
-    //                     .Include(l => l.Track)
-    //                     .Include(l => l.User)
-    //                     .FirstOrDefaultAsync(l => l.Id == id);
-    // }
+    public async Task<List<ListenRecord>> GetAllRecordExceptByUser(string handle)
+    {
+        return await _db.ListenRecords.Where(l => l.UserHandle != handle).ToListAsync();
+    }
 
-    public async Task<List<ListenRecord>> CreateListenRecords(string userId, List<Track> tracks)
+    public async Task<List<ListenRecord>> CreateListenRecords(ApplicationUser user, List<Track> tracks)
     {
         List<ListenRecord> records = new List<ListenRecord>();
         var newTracks = await CreateTracksAsync(tracks);
@@ -87,7 +78,10 @@ public class TrackRepository : ITrackRepository
         {
             Id = 0,
             TrackId = t.Id,
-            UserId = userId
+            UserId = user.Id,
+            UserHandle = user.Handle,
+            TrackName = t.Name,
+            ProfilePicture = user.ProfilePicture
         }).ToList();
 
         
@@ -101,7 +95,6 @@ public class TrackRepository : ITrackRepository
                 {
                     await CreateRecord(record);
                 }
-                record.Id = rec.Id;
             }
         }
         return records;

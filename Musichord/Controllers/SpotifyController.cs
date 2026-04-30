@@ -53,40 +53,34 @@ public class SpotifyController : ControllerBase
         List<Track> tracks = new();
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
         string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=2");
-
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine(response);
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
-        Console.WriteLine("===========================================================================================");
         RecentDTO? recentDTo = JsonSerializer.Deserialize<RecentDTO>(response);
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine(response);
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("======================================================================");
+
 
         if (recentDTo != null)
         {
             tracks = await SpotifyApiMapper.MapFromRecent(recentDTo);     
         }
 
-        return Ok(await _trackRepo.CreateListenRecords(currentUser.Id, tracks));
-
-        // List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
-
-        // await _db.ListenRecords.Where(ft => ft.UserId == currentUser!.Id).ExecuteDeleteAsync();
-
-        // recents = newTracks.Select(t => new ListenRecord
-        // {
-        //     Id = 0,
-        //     TrackId = t.Id,
-        //     UserId = currentUser!.Id
-        // }).ToList();
-
-        // await _recordRepo.CreateListenRecordsAsync(recents);
-        
+        if (currentUser == null)
+        {
+            return Unauthorized();
+        }
+        return Ok(await _trackRepo.CreateListenRecords(currentUser, tracks));
     }
 
     public async Task<string> GetRequest(string accessToken, string uri)

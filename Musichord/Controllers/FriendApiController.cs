@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Musichord.Models.Entities;
 using Musichord.Services;
@@ -6,32 +7,63 @@ namespace Musichord.Controllers;
 
 [Route("api/friend")]
 [ApiController]
+[Authorize]
 public class FriendApiController : ControllerBase
 {
     private readonly IFriendshipRepo _friendRepo;
     private readonly IUserRepository _userRepo;
+    private readonly ITrackRepository _trackRepo;
 
-    public FriendApiController(IFriendshipRepo friendRepo, IUserRepository userRepo)
+    public FriendApiController(IFriendshipRepo friendRepo, IUserRepository userRepo, ITrackRepository trackRepo)
     {
         _friendRepo = friendRepo;
         _userRepo = userRepo;
+        _trackRepo = trackRepo;
     }
 
     [HttpGet("nonfriends")]
     public async Task<IActionResult> Get()
     {
-        var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
 
-        return Ok(await _friendRepo.GetAllNonFriends(user));
+        Console.WriteLine(User.Identity.Name);
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
+        var users = await _friendRepo.GetAllNonFriends(user);
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+
+        Console.WriteLine(users.Count());
+        return Ok(users);
+    }
+
+    [HttpGet("nonfriends/records")]
+    [ActionName("Get")]
+    public async Task<IActionResult> GetRecords()
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity?.Name);
+        return Ok(await _userRepo.ReadAllExceptAsync(user.Handle));
     }
 
 
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {
-
         // find a way to check if there is a pending request already in place, if so accept that one... wait this is a put don't do that here
-
         var userRequested = await _userRepo.ReadByHandleAsync(username);
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
 

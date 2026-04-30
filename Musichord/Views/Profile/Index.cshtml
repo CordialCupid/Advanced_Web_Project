@@ -100,79 +100,11 @@
 
         </tr>
     </thead>
-        @for (var x = 5; x < Model.Count(); x++)
-        {
-            var track = Model.ElementAt(x);
-        <tr>
-            <td class="align-middle">
-                <span class="badge bg-musichord-green text-dark">
-                    @(x+1)
-                </span>
-            </td>
-            <td class="align-middle">
-                <img src="@track.Album?.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
-            </td>
-            <td class="align-middle">@track.Name </td>
-            <td class="align-middle">@track.Artist?.Name</td>
-        </tr>
-        }
         </table>
     </div>
 
-
-    @* <div class="row align-items-center">
-        @{int topfivecount = 0; }
-        @foreach (var track in Model)
-        {
-            topfivecount++;
-            <div class="col" align="center">
-                <p>@topfivecount</p>
-                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
-                <p>@track.Name</p>
-                <p>@track.Artist?.Name</p>
-            </div>
-            
-            if (topfivecount == 5)
-            {
-                break;
-            }
-        }
-    </div> *@
 </div>
 
-
-@* <table class="table">
-    <thead>
-        <tr>
-            <th>
-                #
-            </th>
-            <th>
-                -
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Artist
-            </th>
-
-        </tr>
-    </thead>
-    @{int count = 0;}
-    @foreach (var track in Model)
-    {
-        count++;
-        <tr>
-            <td>@count</td>
-            <td>
-                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
-            </td>
-            <td>@track.Name </td>
-            <td>@track.Artist?.Name</td>
-        </tr>
-    }
-</table> *@
 
 
 @section Scripts{

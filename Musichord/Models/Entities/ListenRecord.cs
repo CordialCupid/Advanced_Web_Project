@@ -8,9 +8,12 @@ public class ListenRecord
 {
     public int Id {get;set;}
     public int TrackId {get;set;}
+    public string TrackName {get;set;} = String.Empty;
+    public string ProfilePicture {get;set;} = String.Empty;
     [JsonIgnore]
     public Track? Track {get;set;}
     public string UserId {get;set;} = String.Empty;
+    public string UserHandle {get;set;} = String.Empty;
     [JsonIgnore]
     public ApplicationUser? User {get;set;}
 }

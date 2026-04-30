@@ -51,17 +51,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Explore()
     {
-        // List<ApplicationUser?> friendsList = new();
-        // if (User.Identity != null)
-        // {
-        //     var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
-                  
-        //     if (user != null)
-        //     {
-        //         friendsList = await _friendRepo.GetAllNonFriends(user);
-        //     }
-        // }
-
         return View();
     }
 

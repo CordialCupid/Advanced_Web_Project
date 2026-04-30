@@ -11,6 +11,16 @@ export class ExploreDOM {
         emptyState.setAttribute('style', 'display: none;');
     }
 
+    static showNoActivityMessage() {
+        const emptyState = document.querySelector('#emptyStateAct');
+        emptyState.setAttribute('style', 'display: block;');
+    }
+
+    static hideNoActivityMessage() {
+        const emptyState = document.querySelector('#emptyStateAct');
+        emptyState.setAttribute('style', 'display: none;');
+    }
+
     static showUserCards(users) {
         const userContainer = document.querySelector('#userContainer');
         userContainer.innerHTML = "";
@@ -20,7 +30,19 @@ export class ExploreDOM {
             ExploreDOM.hideNoUsersMessage();
             users.forEach(user => {
                 ExploreDOM.createUserCard(user);
-                console.log(user);
+            });
+        }
+    }
+
+    static showUserActivity(records) {
+        const table = document.querySelector('.activity-body');
+        table.innerHTML = "";
+        if (records.length === 0) {
+            ExploreDOM.showNoActivityMessage();
+        } else {
+            ExploreDOM.hideNoActivityMessage();
+            records.forEach(rec => {
+                ExploreDOM.insertActivity(rec);
             });
         }
     }
@@ -54,4 +76,13 @@ export class ExploreDOM {
         userContainer.appendChild(outerDiv);
     }
 
+    static insertActivity(record) {
+        const tableRow = document.createElement('tr');
+        const body = document.querySelector('.activity-body');
+        body.appendChild(tableRow);
+        tableRow.innerHTML = `
+            <td class="align-middle">${record.handle}</td>
+            <td class="align-middle">${record.trackName}</td>
+        `;
+    }
 }

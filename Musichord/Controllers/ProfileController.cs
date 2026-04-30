@@ -22,7 +22,7 @@ public class ProfileController : Controller
     [Authorize]
     public async Task<IActionResult> Index()
     {
-        ApplicationUser? user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+        ApplicationUser? user = await _userRepo.ReadByUsernameAsync(User.Identity?.Name);
         var tracks = user?.FavoriteTracks.Select(ft => ft.Track).ToList();
         ViewData["Handle"] = user?.Handle;
         ViewData["ProfilePicture"] = user?.ProfilePicture;
