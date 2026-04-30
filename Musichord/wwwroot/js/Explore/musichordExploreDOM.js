@@ -11,6 +11,16 @@ export class ExploreDOM {
         emptyState.setAttribute('style', 'display: none;');
     }
 
+    static showNoActivityMessage() {
+        const emptyState = document.querySelector('#emptyStateAct');
+        emptyState.setAttribute('style', 'display: block;');
+    }
+
+    static hideNoActivityMessage() {
+        const emptyState = document.querySelector('#emptyStateAct');
+        emptyState.setAttribute('style', 'display: none;');
+    }
+
     static showUserCards(users) {
         const userContainer = document.querySelector('#userContainer');
         userContainer.innerHTML = "";
@@ -20,7 +30,6 @@ export class ExploreDOM {
             ExploreDOM.hideNoUsersMessage();
             users.forEach(user => {
                 ExploreDOM.createUserCard(user);
-                console.log(user);
             });
         }
     }
@@ -54,4 +63,14 @@ export class ExploreDOM {
         userContainer.appendChild(outerDiv);
     }
 
+    static insertActivity(user) {
+        const tableRow = document.createElement('tr');
+        const body = document.querySelector('#activity-body');
+        body.appendChild(tableRow);
+        tableRow.innerHTML = `
+            <td class="align-middle">${user.handle}</td>
+            <td class="align-middle">${track.Name}</td>
+            <td class="align-middle">${track.Name}</td>
+        `;
+    }
 }

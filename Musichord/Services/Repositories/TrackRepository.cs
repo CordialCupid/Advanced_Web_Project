@@ -56,13 +56,6 @@ public class TrackRepository : ITrackRepository
                         .FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    // public async Task<Track?> ReadTrackBySpotifyIdAsync(string spotId)
-    // {
-    //     return await _db.Tracks
-    //                     .Include(t => t.Artist)
-    //                     .FirstOrDefaultAsync(t => t.SpotifyId == spotId);
-    // }
-
     // LISTEN RECORD (RECENTLY PLAYED) METHODS
 
     public async Task CreateRecord(ListenRecord record)
@@ -70,14 +63,6 @@ public class TrackRepository : ITrackRepository
         await _db.ListenRecords.AddAsync(record);
         await _db.SaveChangesAsync();
     }
-
-    // public async Task<ListenRecord?> GetRecordAsync(int id)
-    // {
-    //     return await _db.ListenRecords
-    //                     .Include(l => l.Track)
-    //                     .Include(l => l.User)
-    //                     .FirstOrDefaultAsync(l => l.Id == id);
-    // }
 
     public async Task<List<ListenRecord>> CreateListenRecords(string userId, List<Track> tracks)
     {

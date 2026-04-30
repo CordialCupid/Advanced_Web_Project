@@ -8,6 +8,7 @@ await main();
 async function main() {
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
     ExploreDOM.showNoUsersMessage();
+    ExploreDOM.showNoActivityMessage();
 
     await setUpEventHandlers(friendRepo);
 

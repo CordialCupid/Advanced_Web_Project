@@ -10,11 +10,13 @@ public class FriendApiController : ControllerBase
 {
     private readonly IFriendshipRepo _friendRepo;
     private readonly IUserRepository _userRepo;
+    private readonly ITrackRepository _trackRepo;
 
-    public FriendApiController(IFriendshipRepo friendRepo, IUserRepository userRepo)
+    public FriendApiController(IFriendshipRepo friendRepo, IUserRepository userRepo, ITrackRepository trackRepo)
     {
         _friendRepo = friendRepo;
         _userRepo = userRepo;
+        _trackRepo = trackRepo;
     }
 
     [HttpGet("nonfriends")]
@@ -23,6 +25,17 @@ public class FriendApiController : ControllerBase
         var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
 
         return Ok(await _friendRepo.GetAllNonFriends(user));
+    }
+
+    [HttpGet("nonfriends/records")]
+    [ActionName("Get")]
+    public async Task<IActionResult> GetRecords()
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+        return Ok(await _userRepo.ReadAllExceptAsync(User.Identity?.Name));
     }
 
 

@@ -7,10 +7,14 @@ await main();
 async function main() {
     const spotRepo = new SpotifyAJAXRepository();
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
-    await getRecentlyPlayed(spotRepo)
-            .then(async () => {
-                await getTopFive(spotRepo);
-            });
+    await spotRepo.checkToken()
+        .then(async r => {
+            await getRecentlyPlayed(spotRepo);
+        })
+        .then(async r2 => {
+            await getTopFive(spotRepo);
+        })
+        .catch(error => console.error(error));
     await setUpEventHandlers(friendRepo);
 }
 

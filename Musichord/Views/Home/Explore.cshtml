@@ -30,7 +30,7 @@
         <p style="color: #1DB954">Here is the activity feed for people you arent friends with:</p>
     </div>
 
-    <div class="row mt-5" id="emptyState" style="display: none;">
+    <div class="row mt-5" id="emptyStateAct" style="display: none;">
         <div class="col text-center py-5">
             <div class="text-muted">
                 <i class="bi bi-person-dash-fill" style="font-size: 4rem;"></i>
@@ -51,6 +51,9 @@
             </tr>
         </thead>
         <!-- Activity feed will be dynamically generated via JavaScript and AJAX-->
+        <tbody class="activity-body">
+            
+        </tbody>
     </table>
 </div>
 @section Scripts{

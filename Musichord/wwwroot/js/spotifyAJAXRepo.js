@@ -144,5 +144,14 @@ export class SpotifyAJAXRepository {
         }
         return await response.json();
     }
+
+    async checkToken(address) {
+        const response = await fetch(address)
+                .then(async resp => {
+                    if (!response.ok) {
+                        await this.refreshAccessToken();
+                    }    
+                });
+    }
 }
 

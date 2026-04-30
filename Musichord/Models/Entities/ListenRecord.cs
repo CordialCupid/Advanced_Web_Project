@@ -11,6 +11,7 @@ public class ListenRecord
     [JsonIgnore]
     public Track? Track {get;set;}
     public string UserId {get;set;} = String.Empty;
+    
     [JsonIgnore]
     public ApplicationUser? User {get;set;}
 }
