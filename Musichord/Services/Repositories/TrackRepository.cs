@@ -79,7 +79,9 @@ public class TrackRepository : ITrackRepository
             Id = 0,
             TrackId = t.Id,
             UserId = user.Id,
-            UserHandle = user.Handle
+            UserHandle = user.Handle,
+            TrackName = t.Name,
+            ProfilePicture = user.ProfilePicture
         }).ToList();
 
         
@@ -93,7 +95,6 @@ public class TrackRepository : ITrackRepository
                 {
                     await CreateRecord(record);
                 }
-                record.Id = rec.Id;
             }
         }
         return records;

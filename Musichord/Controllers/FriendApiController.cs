@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Musichord.Models.Entities;
 using Musichord.Services;
@@ -6,6 +7,7 @@ namespace Musichord.Controllers;
 
 [Route("api/friend")]
 [ApiController]
+[Authorize]
 public class FriendApiController : ControllerBase
 {
     private readonly IFriendshipRepo _friendRepo;
@@ -22,9 +24,27 @@ public class FriendApiController : ControllerBase
     [HttpGet("nonfriends")]
     public async Task<IActionResult> Get()
     {
-        var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
 
-        return Ok(await _friendRepo.GetAllNonFriends(user));
+        Console.WriteLine(User.Identity.Name);
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
+        var users = await _friendRepo.GetAllNonFriends(user);
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+        Console.WriteLine("==================================================================================================================");
+
+        Console.WriteLine(users.Count());
+        return Ok(users);
     }
 
     [HttpGet("nonfriends/records")]

@@ -34,6 +34,19 @@ export class ExploreDOM {
         }
     }
 
+    static showUserActivity(records) {
+        const table = document.querySelector('.activity-body');
+        table.innerHTML = "";
+        if (records.length === 0) {
+            ExploreDOM.showNoActivityMessage();
+        } else {
+            ExploreDOM.hideNoActivityMessage();
+            records.forEach(rec => {
+                ExploreDOM.insertActivity(rec);
+            });
+        }
+    }
+
     static createUserCard(user) {
         const outerDiv = document.createElement('div');
         outerDiv.className = 'col';
@@ -63,14 +76,13 @@ export class ExploreDOM {
         userContainer.appendChild(outerDiv);
     }
 
-    static insertActivity(user) {
+    static insertActivity(record) {
         const tableRow = document.createElement('tr');
-        const body = document.querySelector('#activity-body');
+        const body = document.querySelector('.activity-body');
         body.appendChild(tableRow);
         tableRow.innerHTML = `
-            <td class="align-middle">${user.handle}</td>
-            <td class="align-middle">${track.Name}</td>
-            <td class="align-middle">${track.Name}</td>
+            <td class="align-middle">${record.handle}</td>
+            <td class="align-middle">${record.trackName}</td>
         `;
     }
 }

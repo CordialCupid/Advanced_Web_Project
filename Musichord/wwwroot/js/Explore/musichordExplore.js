@@ -13,7 +13,10 @@ async function main() {
     await setUpEventHandlers(friendRepo);
 
     let users = await friendRepo.readAll();
+    console.log(users);
+    let records = await friendRepo.getNonActivity();
     ExploreDOM.showUserCards(users);
+    ExploreDOM.showUserActivity(records);
 }
 
 

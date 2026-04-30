@@ -7,14 +7,13 @@ await main();
 async function main() {
     const spotRepo = new SpotifyAJAXRepository();
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
-    await spotRepo.checkToken()
-        .then(async r => {
-            await getRecentlyPlayed(spotRepo);
-        })
-        .then(async r2 => {
-            await getTopFive(spotRepo);
-        })
-        .catch(error => console.error(error));
+    try {
+        await spotRepo.refreshAccessToken();
+        await getRecentlyPlayed(spotRepo);
+        await getTopFive(spotRepo);
+    } catch (error) {
+        console.error(error);
+    }
     await setUpEventHandlers(friendRepo);
 }
 
@@ -56,7 +55,6 @@ async function setUpEventHandlers(friendRepo) {
     
     document.addEventListener('click', async (e) => {
         const acceptFriendReqBtn = e.target.closest('.acceptFriendReqBtn');
-        console.log("ah");
         if (acceptFriendReqBtn) {
             const name = acceptFriendReqBtn.getAttribute('data-user-name');
             console.log(name);

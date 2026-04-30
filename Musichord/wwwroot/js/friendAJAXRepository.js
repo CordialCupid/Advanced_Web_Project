@@ -23,6 +23,7 @@ export class friendAJAXRepository
         if (!response.ok) {
             throw new Error("Error adding friend!");
         }
+        return response.json();
     }
     
     async updateFriendshipStatus(name) {
@@ -46,5 +47,14 @@ export class friendAJAXRepository
             throw new Error("Error deleting friendship!");
         }
         return await response.json();
+    }
+
+    async getNonActivity() {
+        const newAddr = this.#baseAddress + `/nonfriends/records`;
+        const response = await fetch(newAddr);
+        if (!response.ok) {
+            throw new Error("Error adding friend!");
+        }
+        return response.json();
     }
 }

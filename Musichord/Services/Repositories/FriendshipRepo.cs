@@ -24,9 +24,9 @@ public class FriendshipRepo : IFriendshipRepo
                         .FirstOrDefaultAsync(f => f.SenderHandle == sender && f.ReceiverHandle == receiver);
     }
 
-    public async Task<List<ApplicationUser?>> GetAllNonFriends(ApplicationUser user)
+    public async Task<ICollection<ApplicationUser?>> GetAllNonFriends(ApplicationUser user)
     {
-        List<ApplicationUser?> friendsList = new List<ApplicationUser?>();
+        ICollection<ApplicationUser?> friendsList = new List<ApplicationUser?>();
         if (user != null)
         {
             var exceptUser = await _userRepo.ReadAllExceptAsync(user.Email);
