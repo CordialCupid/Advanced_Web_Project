@@ -7,6 +7,7 @@ using Musichord.Models.Entities;
 
 namespace Musichord.Controllers;
 
+[Authorize]
 public class ProfileController : Controller
 {
     private readonly ILogger<ProfileController> _logger;
@@ -19,7 +20,6 @@ public class ProfileController : Controller
     }
 
     // should return the logged in user's profile
-    [Authorize]
     public async Task<IActionResult> Index()
     {
         ApplicationUser? user = await _userRepo.ReadByUsernameWithTracksAsync(User.Identity?.Name);
@@ -52,12 +52,6 @@ public class ProfileController : Controller
         return View("Index", tracks);
     }
 
-    
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

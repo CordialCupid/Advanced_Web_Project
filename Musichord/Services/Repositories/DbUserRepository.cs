@@ -34,7 +34,10 @@ public class DbUserRepository : IUserRepository
         return await _db.Users
         .Include(u => u.FavoriteTracks)
             .ThenInclude(ft => ft.Track)
-                .ThenInclude(t => t.Artist)
+                    .ThenInclude(a => a.Artist)
+        .Include(t => t.FavoriteTracks)
+            .ThenInclude(ft => ft.Track)
+                .ThenInclude(a => a.Album)
         .Include(r => r.Records)
         .Include(r => r.Reviews)
         .FirstOrDefaultAsync(u => u.Handle == handle);

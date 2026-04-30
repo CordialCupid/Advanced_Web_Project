@@ -6,4 +6,6 @@ public record RecentTrackDTO
 {
     [JsonPropertyName("track")]
     public TrackDTO? Track {get;set;} 
+    [JsonPropertyName("played_at")]
+    public DateTime Played {get;set;}
 }
