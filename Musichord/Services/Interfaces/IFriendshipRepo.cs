@@ -7,4 +7,5 @@ public interface IFriendshipRepo
     Task<ICollection<string>> GetAllFriendsHandlesAsync(string user);
     Task DeleteFriendship(string sender, string receiver);
     Task UpdateFriendshipStatus(string sender, string receiver);
+    Task<List<ApplicationUser?>> GetAllNonFriends(ApplicationUser user);
 }

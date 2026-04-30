@@ -17,6 +17,14 @@ export class friendAJAXRepository
         return await response.json();
     }
 
+    async readAll() {
+        const newAddr = this.#baseAddress + `/nonfriends`;
+        const response = await fetch(newAddr);
+        if (!response.ok) {
+            throw new Error("Error adding friend!");
+        }
+    }
+    
     async updateFriendshipStatus(name) {
         const newAddr = this.#baseAddress + `/updatestatus/${name}`;
         const response = await fetch(newAddr, {

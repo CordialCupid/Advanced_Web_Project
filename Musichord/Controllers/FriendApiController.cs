@@ -17,6 +17,15 @@ public class FriendApiController : ControllerBase
         _userRepo = userRepo;
     }
 
+    [HttpGet("nonfriends")]
+    public async Task<IActionResult> Get()
+    {
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+
+        return Ok(await _friendRepo.GetAllNonFriends(user));
+    }
+
+
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {

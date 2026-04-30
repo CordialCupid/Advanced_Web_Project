@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 namespace Musichord.Models.Entities;
 
@@ -8,9 +9,11 @@ public class Track
     public string Name {get;set;} = String.Empty;
     public string SpotifyId {get;set;} = String.Empty;
     public int ArtistId {get;set;}
+    [JsonIgnore]
     public Artist? Artist {get;set;}
-    public string ImageUrl {get;set;} = String.Empty;
+    [JsonIgnore]
     public Album? Album {get;set;}
     public int AlbumId {get;set;}
+    [JsonIgnore]
     public ICollection<ListenRecord> Records {get;set;} = new List<ListenRecord>();
 }

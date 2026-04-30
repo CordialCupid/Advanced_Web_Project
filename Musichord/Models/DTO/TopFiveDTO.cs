@@ -5,5 +5,5 @@ namespace Musichord.Models.DTO;
 public record TopFiveDTO
 {
     [JsonPropertyName("items")]
-    public required List<TrackDTO> Tracks {get; init;}
+    public required List<TrackDTO> Tracks {get; set;}
 }

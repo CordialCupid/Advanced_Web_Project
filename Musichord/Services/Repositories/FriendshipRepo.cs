@@ -1,16 +1,19 @@
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using Musichord.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Musichord.Models.Entities;
 
 public class FriendshipRepo : IFriendshipRepo
 {
     private readonly ApplicationDbContext _db;
+    private readonly IUserRepository _userRepo;
 
-    public FriendshipRepo(ApplicationDbContext db)
+    public FriendshipRepo(ApplicationDbContext db, IUserRepository userRepo)
     {
         _db = db;
+        _userRepo = userRepo;
     }
 
     public async Task<Friendship?> ReadAsync(string sender, string receiver)
@@ -21,7 +24,17 @@ public class FriendshipRepo : IFriendshipRepo
                         .FirstOrDefaultAsync(f => f.SenderHandle == sender && f.ReceiverHandle == receiver);
     }
 
-
+    public async Task<List<ApplicationUser?>> GetAllNonFriends(ApplicationUser user)
+    {
+        List<ApplicationUser?> friendsList = new List<ApplicationUser?>();
+        if (user != null)
+        {
+            var exceptUser = await _userRepo.ReadAllExceptAsync(user.Email);
+            var friends = await GetAllFriendsAsync(user.Handle);
+            friendsList = exceptUser.Except(friends).ToList();
+        }
+        return friendsList;
+    }
 
     public async Task<ICollection<Friendship>> GetAllFriendshipsAsync()
     {
@@ -31,16 +44,34 @@ public class FriendshipRepo : IFriendshipRepo
                         .ToListAsync();
     }
 
-    public async Task<ICollection<string>> GetAllFriendsHandlesAsync(string user)
+    public async Task<ICollection<string>> GetAllFriendsHandlesAsync(string handle)
     {
         var relationships = await GetAllFriendshipsAsync();
-        var usersRelationships = relationships.Where(f => f.ReceiverHandle == user || f.SenderHandle == user).ToList();
-        var userSent = usersRelationships.Where(f => f.SenderHandle == user).Select(f => f.ReceiverHandle).ToList();
-        var userReceived = usersRelationships.Where(f => f.ReceiverHandle == user).Select(f => f.SenderHandle).ToList();
+        var usersRelationships = relationships.Where(f => f.ReceiverHandle == handle || f.SenderHandle == handle).ToList();
+        var userSent = usersRelationships.Where(f => f.SenderHandle == handle).Select(f => f.ReceiverHandle).ToList();
+        var userReceived = usersRelationships.Where(f => f.ReceiverHandle == handle).Select(f => f.SenderHandle).ToList();
 
         var friendsHandles = userSent.Concat(userReceived).ToList();
 
         return friendsHandles;
+    }
+
+    public async Task<ICollection<ApplicationUser?>> GetAllFriendsAsync(string handle)
+    {
+        var relationships = await GetAllFriendshipsAsync();
+        var usersRelationships = relationships.Where(f => f.ReceiverHandle == handle || f.SenderHandle == handle).ToList();
+        var userSent = usersRelationships.Where(f => f.SenderHandle == handle).Select(f => f.ReceiverHandle).ToList();
+        var userReceived = usersRelationships.Where(f => f.ReceiverHandle == handle).Select(f => f.SenderHandle).ToList();
+
+        var friendsHandles = userSent.Concat(userReceived).ToList();
+        List<ApplicationUser?> friends = new();
+
+        foreach(var friend in friendsHandles)
+        {
+            friends.Add(await _userRepo.ReadByHandleAsync(friend));
+        }
+
+        return friends;
     }
 
     public async Task<Friendship> CreateFriendship(ApplicationUser sender, ApplicationUser receiver)

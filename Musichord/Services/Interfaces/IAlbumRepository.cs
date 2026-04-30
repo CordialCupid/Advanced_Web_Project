@@ -1,9 +1,6 @@
-using Musichord.Models.Entities;
-
-namespace Musichord.Services;
+namespace Musichord.Services.Interfaces;
 
 public interface IAlbumRepository
 {
-    Task CreateAlbumsAsync(List<Album> albums);
-    Task<Album> CreateAlbumAsync(Album album);
+    
 }
