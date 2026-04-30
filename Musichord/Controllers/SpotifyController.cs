@@ -34,7 +34,7 @@ public class SpotifyController : ControllerBase
             return Unauthorized();
         }   
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
-        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0&time_range=short_term");
+        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=25&offset=0&time_range=short_term");
 
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
         var tracks = await SpotifyApiMapper.Map(topFives);
