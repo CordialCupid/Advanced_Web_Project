@@ -51,21 +51,21 @@
         
         @{int y = Model.Count();}
 
-        @for (var x = 0; x < Math.Min(y, 5); x++)
+        @* @for (var x = 0; x < Math.Min(y, 5); x++)
         {
             
 
             var track = Model.ElementAt(x);
-            @* <div class="col" align="center">
+            <div class="col" align="center">
                 <p>@(x + 1)</p>
                 <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
                 <p>@track.Name</p>
                 <p>@track.Artist?.Name</p>
-            </div> *@
+            </div> 
 
             <div class="col top-five-col">
                 <div class="card top-five-card h-100">
-                    <img src="@track.ImageUrl" class="card-img-top" alt="Album Art">
+                    <img src="@track.Album.ImageUrl" class="card-img-top" alt="Album Art">
                     <span class="position-absolute top-0 start-0 m-2 badge bg-musichord-green text-dark">
                         @(x+1)
                     </span>
@@ -75,13 +75,13 @@
                     </div>
                 </div>
             </div>
-        }
+        }  *@
         @if (isOwnProfile) {
             <h3 class="text-light text-center mt-5">Your Other Liked Songs:</h3>
         } else {
             <h3 class="text-light text-center mt-5">@ViewData["Handle"]'s Other Liked Songs:</h3>
         }
-        @* <h3>Your other liked tracks :D</h3> *@
+        <h3>Your other liked tracks :D</h3>
         <table class="table">
     <thead>
         <tr>
@@ -110,7 +110,7 @@
                 </span>
             </td>
             <td class="align-middle">
-                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <img src="@track.Album.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
             </td>
             <td class="align-middle">@track.Name </td>
             <td class="align-middle">@track.Artist?.Name</td>

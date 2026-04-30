@@ -22,7 +22,7 @@ public class HomeController : Controller
         _friendRepo = friendRepo;
     }
 
-    [AllowAnonymous] // may have to remove with the friends stuff
+ // may have to remove with the friends stuff
     public async Task<IActionResult> Index()
     {    
         
@@ -49,21 +49,18 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Explore()
     {
-        List<string> friendsList = new();
-        if (User.Identity != null)
-        {
-            var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
-            
-            
-            if (user != null)
-            {
-                var exceptUser = await _userRepo.ReadAllHandlesExceptUserAsync(user.Handle);
-                var friends = await _friendRepo.GetAllFriendsHandlesAsync(user.Handle);
-                friendsList = exceptUser.Except(friends).ToList();
-            }
-        }
+        // List<ApplicationUser?> friendsList = new();
+        // if (User.Identity != null)
+        // {
+        //     var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+                  
+        //     if (user != null)
+        //     {
+        //         friendsList = await _friendRepo.GetAllNonFriends(user);
+        //     }
+        // }
 
-        return View(friendsList);
+        return View();
     }
 
     public async Task<IActionResult> Friends()

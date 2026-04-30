@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Muschord.Services;
 using Musichord.Models.DTO;
 using Musichord.Models.Entities;
 using Musichord.Services;
@@ -15,107 +14,88 @@ namespace Musichord.Controllers;
 public class SpotifyController : ControllerBase
 {
     private readonly ITrackRepository _trackRepo;
-    private readonly IArtistRepository _artistRepo;
-    private readonly IListenRecordRepository _recordRepo;
-    private readonly IAlbumRepository _albumRepo;
-    private readonly ISpotifyRepo _spotRepo;
     private readonly IUserRepository _userRepo;
     private readonly ApplicationDbContext _db;
+    private readonly HttpClient _httpClient;
 
-    public SpotifyController(ITrackRepository trackRepo, IArtistRepository artistRepo, ISpotifyRepo spotRepo, IUserRepository userRepo, ApplicationDbContext db, IAlbumRepository albumRepo, IListenRecordRepository recordRepo)
+    public SpotifyController(ITrackRepository trackRepo, IUserRepository userRepo, ApplicationDbContext db, HttpClient client)
     {
         _trackRepo = trackRepo;
-        _artistRepo = artistRepo;
-        _spotRepo = spotRepo;
         _userRepo = userRepo;
         _db = db;
-        _albumRepo = albumRepo;
-        _recordRepo = recordRepo;
+        _httpClient = client;
     }
 
     [HttpGet("topfive/{accessToken}")]
     public async Task<IActionResult> GetFive(string accessToken)
     {   
-        List<FavoriteTrack> favs = new List<FavoriteTrack>();
-        ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User!.Identity!.Name!);
-        string response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=25&offset=0&time_range=short_term");
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }   
+        ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
+        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=5&offset=0&time_range=short_term");
+
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
-        List<Artist> artists = await DTOToArtist.MapToArtist(topFives!.Tracks);
-        List<Track> tracks = await DTOToTrack.MapToTrack(topFives!.Tracks);
-        List<Album> albums = DTOToAlbum.MapToAlbum(topFives.Tracks);
-
-        await _artistRepo.CreateArtistsAsync(artists);
-        for (int i = 0; i < albums.Count(); i++)
-        {
-            albums[i].ArtistId = artists[i].Id;
-        }
+        var tracks = await SpotifyApiMapper.Map(topFives);
         
-        await _albumRepo.CreateAlbumsAsync(albums);
-
-        for (int i = 0; i < topFives.Tracks.Count(); i++)
-        {
-            tracks[i].ArtistId = artists[i].Id;
-            tracks[i].AlbumId = albums[i].Id;   
-        }
-
-        List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
-
-        await _db.FavoriteTracks.Where(ft => ft.UserId == currentUser!.Id).ExecuteDeleteAsync();
-
-        favs = newTracks.Select(t => new FavoriteTrack
-        {
-            Id = 0,
-            TrackId = t.Id,
-            UserId = currentUser!.Id
-        }).ToList();
-
-        await _db.FavoriteTracks.AddRangeAsync(favs);
-        await _db.SaveChangesAsync();
-
-        
-        return Ok();
+        return Ok(await _trackRepo.CreateTopFive(currentUser.Id, tracks));
     }
 
     [HttpGet("recently-played/{accessToken}")]
     public async Task<IActionResult> GetRecent(string accessToken)
     {   
-        List<ListenRecord> recents = new List<ListenRecord>();
-        ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User!.Identity!.Name!);
-        string response = await _spotRepo.GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=2");
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        } 
+
+        List<Track> tracks = new();
+        ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
+        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=2");
+
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine(response);
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
+        Console.WriteLine("===========================================================================================");
         RecentDTO? recentDTo = JsonSerializer.Deserialize<RecentDTO>(response);
-        List<TrackDTO?> rippedTracks = await DTOToRecent.MapToRecent(recentDTo.Tracks) ?? new();
-        List<Artist> artists = await DTOToArtist.MapToArtist(rippedTracks);
-        List<Track> tracks = await DTOToTrack.MapToTrack(rippedTracks);  
-        List<Album> albums = DTOToAlbum.MapToAlbum(rippedTracks); 
-        
 
-        await _artistRepo.CreateArtistsAsync(artists);
-        for (int i = 0; i < albums.Count(); i++)
+        if (recentDTo != null)
         {
-            albums[i].ArtistId = artists[i].Id;
-        }
-        
-        await _albumRepo.CreateAlbumsAsync(albums);
-
-        for (int i = 0; i < rippedTracks.Count(); i++)
-        {
-            tracks[i].ArtistId = artists[i].Id;
-            tracks[i].AlbumId = albums[i].Id;  
+            tracks = await SpotifyApiMapper.MapFromRecent(recentDTo);     
         }
 
-        List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
+        return Ok(await _trackRepo.CreateListenRecords(currentUser.Id, tracks));
 
-        await _db.ListenRecords.Where(ft => ft.UserId == currentUser!.Id).ExecuteDeleteAsync();
+        // List<Track> newTracks = await _trackRepo.CreateTracksAsync(tracks);
 
-        recents = newTracks.Select(t => new ListenRecord
-        {
-            Id = 0,
-            TrackId = t.Id,
-            UserId = currentUser!.Id
-        }).ToList();
+        // await _db.ListenRecords.Where(ft => ft.UserId == currentUser!.Id).ExecuteDeleteAsync();
 
-        await _recordRepo.CreateListenRecordsAsync(recents);
+        // recents = newTracks.Select(t => new ListenRecord
+        // {
+        //     Id = 0,
+        //     TrackId = t.Id,
+        //     UserId = currentUser!.Id
+        // }).ToList();
 
-        return Ok();
+        // await _recordRepo.CreateListenRecordsAsync(recents);
+        
+    }
+
+    public async Task<string> GetRequest(string accessToken, string uri)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        request.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+        using var response = await _httpClient.SendAsync(request);
+        string JsonString = await response.Content.ReadAsStringAsync();
+        return JsonString;
     }
 }

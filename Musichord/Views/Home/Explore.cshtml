@@ -1,45 +1,64 @@
 @using Musichord.Models.Entities
-@model IEnumerable<string?>
 
 
 @{
     ViewData["Title"] = "Explore";
 }
 
+<div class="container mt-2">
+    <div class="row">
+        <h1 class="fw-bold">Explore</h1>
+        <p style="color: #1DB954">Dicover others on Musichord and make friends!</p>
+    </div>
 
-<div class="input-group">
-    <span class="input-group-text clickable-hand" id="basic-addon1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
-        </svg>
-    </span>
-    <input type="text" class="form-control" placeholder="Enter User Handle..." aria-label="User Handle Input" aria-describedby="user handle input">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="userContainer">
+            <!-- Additional user cards will be dynamically generated here via Ajax -->
+    </div>
+
+
+    <div class="row" id="emptyState" style="display: none;">
+        <div class="col text-center py-5">
+            <div class="text-muted">
+                <i class="bi bi-person-dash-fill" style="font-size: 4rem;"></i>
+                <h4 class="mt-3">Uh Oh! It looks like we don't have any users....</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <h1 class="fw-bold">Activity Feed</h1>
+        <p style="color: #1DB954">Here is the activity feed for people you arent friends with:</p>
+    </div>
+
+    <div class="row mt-5" id="emptyState" style="display: none;">
+        <div class="col text-center py-5">
+            <div class="text-muted">
+                <i class="bi bi-person-dash-fill" style="font-size: 4rem;"></i>
+                <h4 class="mt-3">It doesn't look like theres any activity here...</h4>
+            </div>
+        </div>
+    </div>
+
+    <table class="table activity-table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Details
+                </th>
+            </tr>
+        </thead>
+        <!-- Activity feed will be dynamically generated via JavaScript and AJAX-->
+    </table>
 </div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Details
-            </th>
-            <th>
-                Add
-            </th>
-        </tr>
-    </thead>
-    @foreach (var user in Model)
-    {
-        <tr>
-            <td>@user</td>
-            <td><button id="viewFriendBtn" type="button" class="btn-musichord-green" data-user-name="@user">View Profile</button></td>  
-            <td><button id="addFriendBtn" type="button" class="btn-musichord-green" data-user-handle="@user">Add Friend</button></td>   
-        </tr>
-    }
-</table>
-
 @section Scripts{
-    <script defer type="module" src="~/js/musichordExplore.js"></script>
+    <script defer type="module" src="~/js/Explore/musichordExplore.js"></script>
 } 
+
+<style>
+    .add-btn:hover {
+        background-color: #1DB954;
+    }
+</style>

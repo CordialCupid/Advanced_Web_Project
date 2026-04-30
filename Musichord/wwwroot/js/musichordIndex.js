@@ -7,8 +7,21 @@ await main();
 async function main() {
     const spotRepo = new SpotifyAJAXRepository();
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
-    await getRecentlyPlayed(spotRepo);
-    await getTopFive(spotRepo);
+    await getRecentlyPlayed(spotRepo)
+            .then(async () => {
+                await getTopFive(spotRepo);
+            });
+}
+
+
+async function getTopFive(spotRepo) {
+    const token = localStorage.getItem('access_token');
+    return await spotRepo.getFive('http://127.0.0.1:5097/api/spotify/topfive/' + token);
+}
+
+async function getRecentlyPlayed(spotRepo){
+    const token = localStorage.getItem('access_token');
+    return await spotRepo.getRecent('http://127.0.0.1:5097/api/spotify/recently-played/' + token);
 }
 
 async function setUpEventHandlers(friendRepo) {

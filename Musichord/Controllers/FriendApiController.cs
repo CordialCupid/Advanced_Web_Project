@@ -17,6 +17,15 @@ public class FriendApiController : ControllerBase
         _userRepo = userRepo;
     }
 
+    [HttpGet("nonfriends")]
+    public async Task<IActionResult> Get()
+    {
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!) ?? new ApplicationUser();
+
+        return Ok(await _friendRepo.GetAllNonFriends(user));
+    }
+
+
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {
@@ -31,26 +40,29 @@ public class FriendApiController : ControllerBase
         throw new ArgumentException("Users being friended must both not be null");
     }
     
-    // [HttpPut("updatestatus/{username}")]
-    // public async Task<IActionResult> Put(string username)
-    // {
-    //     var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
-    //     if (username != null && currentUser != null)
-    //     {
-    //         var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
-    //         return NoContent();          
-    //     }
-    //     throw new ArgumentException("Users being friended must both not be null");
-    // }
+    [HttpPut("updatestatus/{username}")]
+    public async Task<IActionResult> Put(string username)
+    {
+        var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+        var userRequested = await _userRepo.ReadByHandleAsync(username);
+        if (userRequested != null && currentUser != null)
+        {
+            var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+            return NoContent();          
+        }
+        throw new ArgumentException("Users being friended must both not be null");
+    }
 
-    // [HttpDelete("removefriend/{username}")]
-    // public async Task<IActionResult> Delete(string username)
-    // {
-    //     var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
-    //     if (username != null && currentUser != null)
-    //     {
-    //         var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
-    //         return NoContent();          
-    //     }
-    // }
+    [HttpDelete("removefriend/{username}")]
+    public async Task<IActionResult> Delete(string username)
+    {
+        var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+        var userRequested = await _userRepo.ReadByHandleAsync(username);
+        if (userRequested != null && currentUser != null)
+        {
+            var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+            return NoContent();          
+        }
+        throw new ArgumentException("Users being friended must both not be null");
+    }
 }

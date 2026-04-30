@@ -128,5 +128,21 @@ export class SpotifyAJAXRepository {
             throw new Error('Status: ' + api_Response.status);
         }
     }
+
+    async getFive(address) {
+        const response = await fetch(address);
+        if (!response.ok) {
+            throw new Error("Error getting top five!");
+        }
+        return await response.json();
+    }
+
+    async getRecent(address) {
+        const response = await fetch(address);
+        if (!response.ok) {
+            throw new Error("Error getting recently played!");
+        }
+        return await response.json();
+    }
 }
 

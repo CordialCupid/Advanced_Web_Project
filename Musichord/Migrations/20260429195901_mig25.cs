@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Musichord.Migrations
 {
     /// <inheritdoc />
-    public partial class mig24 : Migration
+    public partial class mig25 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,10 @@ namespace Musichord.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     SpotifyId = table.Column<string>(type: "TEXT", nullable: false),
-                    ArtistId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ArtistId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Height = table.Column<int>(type: "INTEGER", nullable: true),
+                    Width = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {

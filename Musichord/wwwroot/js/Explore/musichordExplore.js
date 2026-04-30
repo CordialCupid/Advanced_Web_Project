@@ -1,12 +1,18 @@
 'use strict';
 
-import { friendAJAXRepository } from "./friendAJAXRepository.js";
+import { friendAJAXRepository } from "../friendAJAXRepository.js";
+import { ExploreDOM } from "./musichordExploreDOM.js";
 
 await main();
 
 async function main() {
     const friendRepo = new friendAJAXRepository('http://127.0.0.1:5097/api/friend');
+    ExploreDOM.showNoUsersMessage();
+
     await setUpEventHandlers(friendRepo);
+
+    let users = await friendRepo.readAll();
+    ExploreDOM.showUserCards(users);
 }
 
 

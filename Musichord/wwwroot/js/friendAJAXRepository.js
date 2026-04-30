@@ -16,4 +16,13 @@ export class friendAJAXRepository
         }
         return await response.json();
     }
+
+    async readAll() {
+        const newAddr = this.#baseAddress + `/nonfriends`;
+        const response = await fetch(newAddr);
+        if (!response.ok) {
+            throw new Error("Error adding friend!");
+        }
+        return await response.json();
+    }
 }

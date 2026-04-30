@@ -5,9 +5,9 @@ namespace Musichord.Models.DTO;
 public record AlbumDTO
 {
     [JsonPropertyName("id")]
-    public required string AlbumId {get; init;}
+    public required string AlbumId {get; set;}
     [JsonPropertyName("name")]
-    public required string AlbumName {get;init;}
+    public required string AlbumName {get;set;}
     [JsonPropertyName("images")]
-    public required List<ImageDTO> Images {get;init;}
+    public required List<ImageDTO> Images {get;set;}
 }

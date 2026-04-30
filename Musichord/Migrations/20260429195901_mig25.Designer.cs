@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Musichord.Services;
 
@@ -10,9 +11,11 @@ using Musichord.Services;
 namespace Musichord.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260429195901_mig25")]
+    partial class mig25
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.15");
@@ -155,6 +158,9 @@ namespace Musichord.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("Height")
                         .HasColumnType("INTEGER");
 
@@ -174,6 +180,8 @@ namespace Musichord.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
 
                     b.ToTable("Albums");
                 });
@@ -409,6 +417,10 @@ namespace Musichord.Migrations
                     b.Property<int>("ArtistId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -480,6 +492,17 @@ namespace Musichord.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
+                {
+                    b.HasOne("Musichord.Models.Entities.Artist", "Creator")
+                        .WithMany()
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.FavoriteTrack", b =>
                 {
                     b.HasOne("Musichord.Models.Entities.Track", "Track")
@@ -540,7 +563,7 @@ namespace Musichord.Migrations
             modelBuilder.Entity("Musichord.Models.Entities.Review", b =>
                 {
                     b.HasOne("Musichord.Models.Entities.Album", "AlbumReview")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("AlbumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -559,13 +582,13 @@ namespace Musichord.Migrations
             modelBuilder.Entity("Musichord.Models.Entities.Track", b =>
                 {
                     b.HasOne("Musichord.Models.Entities.Album", "Album")
-                        .WithMany()
+                        .WithMany("Tracks")
                         .HasForeignKey("AlbumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Musichord.Models.Entities.Artist", "Artist")
-                        .WithMany()
+                        .WithMany("Tracks")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -575,6 +598,13 @@ namespace Musichord.Migrations
                     b.Navigation("Artist");
                 });
 
+            modelBuilder.Entity("Musichord.Models.Entities.Album", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tracks");
+                });
+
             modelBuilder.Entity("Musichord.Models.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("FavoriteTracks");
@@ -582,6 +612,11 @@ namespace Musichord.Migrations
                     b.Navigation("Records");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Musichord.Models.Entities.Artist", b =>
+                {
+                    b.Navigation("Tracks");
                 });
 
             modelBuilder.Entity("Musichord.Models.Entities.Track", b =>

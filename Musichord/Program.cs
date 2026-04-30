@@ -3,7 +3,6 @@ using Musichord.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Musichord.Models.Entities;
-using Muschord.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,12 +28,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserRepository, DbUserRepository>();
-builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
-builder.Services.AddScoped<ISpotifyRepo, SpotifyRepo>();
 builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
-builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
-builder.Services.AddScoped<IListenRecordRepository, ListenRecordRepository>();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 
