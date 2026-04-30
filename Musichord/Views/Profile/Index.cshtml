@@ -58,14 +58,14 @@
             var track = Model.ElementAt(x);
             <div class="col" align="center">
                 <p>@(x + 1)</p>
-                <img src="@track.Album.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <img src="@track.Album?.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
                 <p>@track.Name</p>
                 <p>@track.Artist?.Name</p>
             </div> 
 
             <div class="col top-five-col">
                 <div class="card top-five-card h-100">
-                    <img src="@track.Album.ImageUrl" class="card-img-top" alt="Album Art">
+                    <img src="@track.Album?.ImageUrl" class="card-img-top" alt="Album Art">
                     <span class="position-absolute top-0 start-0 m-2 badge bg-musichord-green text-dark">
                         @(x+1)
                     </span>
@@ -110,7 +110,7 @@
                 </span>
             </td>
             <td class="align-middle">
-                <img src="@track.Album.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <img src="@track.Album?.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
             </td>
             <td class="align-middle">@track.Name </td>
             <td class="align-middle">@track.Artist?.Name</td>
