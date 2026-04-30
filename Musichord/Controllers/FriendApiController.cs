@@ -29,6 +29,9 @@ public class FriendApiController : ControllerBase
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {
+
+        // find a way to check if there is a pending request already in place, if so accept that one... wait this is a put don't do that here
+
         var userRequested = await _userRepo.ReadByHandleAsync(username);
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
 
@@ -40,29 +43,43 @@ public class FriendApiController : ControllerBase
         throw new ArgumentException("Users being friended must both not be null");
     }
     
+
+    // okay this is what triggers when you accept a friend request, it should find the pending request and update the status to accepted
     [HttpPut("updatestatus/{username}")]
     public async Task<IActionResult> Put(string username)
     {
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
-        var userRequested = await _userRepo.ReadByHandleAsync(username);
-        if (userRequested != null && currentUser != null)
+        if (username != null && currentUser != null)
         {
-            var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+            var allShips = await _friendRepo.GetAllFriendshipsAsync();
+            var pendingShip = allShips.FirstOrDefault(s => s.SenderHandle == username && s.ReceiverHandle == currentUser.Handle && s.Status == "Pending");
+            if (pendingShip != null)
+            {
+                pendingShip.Status = "Accepted";
+                await _friendRepo.UpdateFriendshipStatus(pendingShip.SenderHandle, pendingShip.ReceiverHandle);
+                return Ok(new { success = true });          
+            }
             return NoContent();          
         }
         throw new ArgumentException("Users being friended must both not be null");
     }
 
+    // triggers when declining a friend request, should find the pending request and delete it, or delete an already accepted friendship if you unfriend someone
     [HttpDelete("removefriend/{username}")]
     public async Task<IActionResult> Delete(string username)
     {
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
-        var userRequested = await _userRepo.ReadByHandleAsync(username);
-        if (userRequested != null && currentUser != null)
+        if (username != null && currentUser != null)
         {
-            var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+            var allShips = await _friendRepo.GetAllFriendshipsAsync();
+            var deleteShip = allShips.FirstOrDefault(s => (s.SenderHandle == username && s.ReceiverHandle == currentUser.Handle) || (s.ReceiverHandle == username && s.SenderHandle == currentUser.Handle));
+            if (deleteShip != null)
+            {
+                await _friendRepo.DeleteFriendship(deleteShip.SenderHandle, deleteShip.ReceiverHandle);
+                return NoContent();          
+            }
             return NoContent();          
         }
-        throw new ArgumentException("Users being friended must both not be null");
+        return NoContent();
     }
 }

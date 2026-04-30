@@ -65,11 +65,11 @@ public class TrackRepository : ITrackRepository
 
     // LISTEN RECORD (RECENTLY PLAYED) METHODS
 
-    // public async Task CreateRecord(ListenRecord record)
-    // {
-    //     await _db.ListenRecords.AddAsync(record);
-    //     await _db.SaveChangesAsync();
-    // }
+    public async Task CreateRecord(ListenRecord record)
+    {
+        await _db.ListenRecords.AddAsync(record);
+        await _db.SaveChangesAsync();
+    }
 
     // public async Task<ListenRecord?> GetRecordAsync(int id)
     // {
@@ -90,10 +90,19 @@ public class TrackRepository : ITrackRepository
             UserId = userId
         }).ToList();
 
-        if (records.Count() > 0)
+        
+        if (records.Count() > 0 )
         {
-            await _db.ListenRecords.AddRangeAsync(records);
-            await _db.SaveChangesAsync();
+            foreach (var record in records)
+            {
+                var rec = await _db.ListenRecords.FirstOrDefaultAsync(r => r.TrackId == record.TrackId && r.UserId == record.UserId);
+
+                if (rec == null)
+                {
+                    await CreateRecord(record);
+                }
+                record.Id = rec.Id;
+            }
         }
         return records;
     }

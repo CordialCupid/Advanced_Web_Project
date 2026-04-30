@@ -51,14 +51,14 @@
         
         @{int y = Model.Count();}
 
-        @* @for (var x = 0; x < Math.Min(y, 5); x++)
+        @for (var x = 0; x < Math.Min(y, 5); x++)
         {
             
 
             var track = Model.ElementAt(x);
             <div class="col" align="center">
                 <p>@(x + 1)</p>
-                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
+                <img src="@track.Album.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
                 <p>@track.Name</p>
                 <p>@track.Artist?.Name</p>
             </div> 
@@ -75,7 +75,7 @@
                     </div>
                 </div>
             </div>
-        }  *@
+        } 
         @if (isOwnProfile) {
             <h3 class="text-light text-center mt-5">Your Other Liked Songs:</h3>
         } else {

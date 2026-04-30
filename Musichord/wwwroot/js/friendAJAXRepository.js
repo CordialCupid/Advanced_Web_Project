@@ -23,6 +23,28 @@ export class friendAJAXRepository
         if (!response.ok) {
             throw new Error("Error adding friend!");
         }
+    }
+    
+    async updateFriendshipStatus(name) {
+        const newAddr = this.#baseAddress + `/updatestatus/${name}`;
+        const response = await fetch(newAddr, {
+            method: 'put'
+        });
+        if (!response.ok) {
+            throw new Error("Error updating friendship status!");
+        }
+        return await response.json();
+    }    
+    
+    // deletes a friend request OR friendship
+    async deleteFriendship(name) {
+        const newAddr = this.#baseAddress + `/removefriend/${name}`;
+        const response = await fetch(newAddr, {
+            method: 'delete'
+        });
+        if (!response.ok) {
+            throw new Error("Error deleting friendship!");
+        }
         return await response.json();
     }
 }

@@ -9,4 +9,5 @@ public interface ITrackRepository
     Task<Track?> ReadTrackAsync(int id);
     Task<List<FavoriteTrack>> CreateTopFive(string userId, List<Track> newTracks);
     Task<List<ListenRecord>> CreateListenRecords(string userId, List<Track> newTracks);
+    Task CreateRecord(ListenRecord record);
 }
