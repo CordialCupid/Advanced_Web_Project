@@ -24,39 +24,25 @@ public class FriendApiController : ControllerBase
     [HttpGet("nonfriends")]
     public async Task<IActionResult> Get()
     {
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-
-        Console.WriteLine(User.Identity.Name);
-        var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
-        var users = await _friendRepo.GetAllNonFriends(user);
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-        Console.WriteLine("==================================================================================================================");
-
-        Console.WriteLine(users.Count());
-        return Ok(users);
+        if (User.Identity?.Name != null)
+        {
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
+            var users = await _friendRepo.GetAllNonFriends(user);
+            return Ok(users);         
+        }
+        throw new InvalidOperationException("User cannot be null");
     }
 
     [HttpGet("nonfriends/records")]
     [ActionName("Get")]
     public async Task<IActionResult> GetRecords()
     {
-        if (User.Identity?.Name == null)
+        if (User.Identity?.Name != null)
         {
-            return Unauthorized();
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
+            return Ok(await _userRepo.ReadAllExceptAsync(user.Handle));
         }
-        var user = await _userRepo.ReadByUsernameAsync(User.Identity?.Name);
-        return Ok(await _userRepo.ReadAllExceptAsync(user.Handle));
+        throw new InvalidOperationException("User cannot be null");
     }
 
 
@@ -72,7 +58,7 @@ public class FriendApiController : ControllerBase
             var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
             return CreatedAtAction("Get", new {Id = newShip.Id}, newShip);          
         }
-        throw new ArgumentException("Users being friended must both not be null");
+        throw new ArgumentException($"Users being friended must both not be null: user1 {username} user2 {currentUser?.Handle}");
     }
     
 

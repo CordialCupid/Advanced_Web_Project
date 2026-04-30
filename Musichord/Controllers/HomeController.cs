@@ -33,9 +33,8 @@ public class HomeController : Controller
         var relationships = await _friendRepo.GetAllFriendshipsAsync();
         if (User.Identity != null)
         {
-            
-            
-            var user = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+
+            var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name!);
             
             if (user != null)
             {

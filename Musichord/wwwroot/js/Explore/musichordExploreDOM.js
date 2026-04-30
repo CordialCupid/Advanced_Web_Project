@@ -64,10 +64,10 @@ export class ExploreDOM {
                 </p>
             </div>
             <div class="card-footer bg-transparent">
-                <button class="btn btn-sm add-btn" style="outline-style: inset; outline-color: #1DB954;" data-user-id="${user.id}">
+                <button class="btn btn-sm add-btn" style="outline-style: inset; outline-color: #1DB954;" data-user-handle="${user.handle}">
                     <i class="bi bi-plus"></i> Add Friend
                 </button>
-                <button class="btn btn-sm view-btn" data-user-id="${user.id}">
+                <button class="btn btn-sm view-btn" data-user-handle="${user.handle}">
                     <i class="bi bi-search"></i> View Profile
                 </button>
             </div>
@@ -84,5 +84,9 @@ export class ExploreDOM {
             <td class="align-middle">${record.handle}</td>
             <td class="align-middle">${record.trackName}</td>
         `;
+    }
+
+    static processAddFriend() {
+
     }
 }
