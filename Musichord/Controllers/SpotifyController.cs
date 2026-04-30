@@ -52,24 +52,8 @@ public class SpotifyController : ControllerBase
 
         List<Track> tracks = new();
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
-        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=2");
+        string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/player/recently-played?limit=10");
         RecentDTO? recentDTo = JsonSerializer.Deserialize<RecentDTO>(response);
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine(response);
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-        Console.WriteLine("======================================================================");
-
 
         if (recentDTo != null)
         {
