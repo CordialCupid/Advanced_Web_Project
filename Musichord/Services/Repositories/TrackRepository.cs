@@ -1,5 +1,6 @@
 using Musichord.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace Musichord.Services;
 
@@ -64,7 +65,12 @@ public class TrackRepository : ITrackRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<List<ListenRecord>> CreateListenRecords(string userId, List<Track> tracks)
+    public async Task<List<ListenRecord>> GetAllRecordExceptByUser(string handle)
+    {
+        return await _db.ListenRecords.Where(l => l.UserHandle != handle).ToListAsync();
+    }
+
+    public async Task<List<ListenRecord>> CreateListenRecords(ApplicationUser user, List<Track> tracks)
     {
         List<ListenRecord> records = new List<ListenRecord>();
         var newTracks = await CreateTracksAsync(tracks);
@@ -72,7 +78,8 @@ public class TrackRepository : ITrackRepository
         {
             Id = 0,
             TrackId = t.Id,
-            UserId = userId
+            UserId = user.Id,
+            UserHandle = user.Handle
         }).ToList();
 
         

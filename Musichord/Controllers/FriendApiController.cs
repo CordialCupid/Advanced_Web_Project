@@ -35,16 +35,15 @@ public class FriendApiController : ControllerBase
         {
             return Unauthorized();
         }
-        return Ok(await _userRepo.ReadAllExceptAsync(User.Identity?.Name));
+        var user = await _userRepo.ReadByUsernameAsync(User.Identity?.Name);
+        return Ok(await _userRepo.ReadAllExceptAsync(user.Handle));
     }
 
 
     [HttpPost("addfriend/{username}")]
     public async Task<IActionResult> Post(string username)
     {
-
         // find a way to check if there is a pending request already in place, if so accept that one... wait this is a put don't do that here
-
         var userRequested = await _userRepo.ReadByHandleAsync(username);
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
 

@@ -80,7 +80,7 @@ public class SpotifyController : ControllerBase
         {
             return Unauthorized();
         }
-        return Ok(await _trackRepo.CreateListenRecords(currentUser.Id, tracks));
+        return Ok(await _trackRepo.CreateListenRecords(currentUser, tracks));
     }
 
     public async Task<string> GetRequest(string accessToken, string uri)
