@@ -30,6 +30,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserRepository, DbUserRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
+builder.Services.AddScoped<IAlbumRepository, DbAlbumRepository>();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 

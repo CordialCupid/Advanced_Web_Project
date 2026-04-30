@@ -17,20 +17,25 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IUserRepository _userRepo;
     private readonly IFriendshipRepo _friendRepo;
-    public HomeController(ILogger<HomeController> logger, IUserRepository userRepo, IFriendshipRepo friendRepo)
+    private readonly IAlbumRepository _albumRepo;
+    public HomeController(ILogger<HomeController> logger, IUserRepository userRepo, IFriendshipRepo friendRepo, IAlbumRepository albumRepo)
     {
         _logger = logger;
         _userRepo = userRepo;
         _friendRepo = friendRepo;
+        _albumRepo = albumRepo;
     }
 
  // may have to remove with the friends stuff
     public async Task<IActionResult> Index()
     {    
         
-        List<Friendship> friendsList = new();
-        var users = await _userRepo.ReadAllAsync();
-        var relationships = await _friendRepo.GetAllFriendshipsAsync();
+        var randomAlbums = await _albumRepo.GetRandomAlbumsAsync(10);
+        ViewData["RandomAlbums"] = randomAlbums;
+
+        // List<Friendship> friendsList = new();
+        // var users = await _userRepo.ReadAllAsync();
+        // var relationships = await _friendRepo.GetAllFriendshipsAsync();
         if (User.Identity != null)
         {
 
@@ -44,8 +49,10 @@ public class HomeController : Controller
                 ViewData["LoggedIn"] = false;
             }
 
+            
+
         }
-        return View(friendsList);
+        return View();
     }
 
     public async Task<IActionResult> Explore()

@@ -1,9 +1,9 @@
 ﻿@using Musichord.Models.Entities
-@model IEnumerable<Friendship>
+@* @model IEnumerable<Friendship> *@
 
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "musichord";
 }
 
   <div class="px-4 py-5 my-5 text-center">
@@ -27,6 +27,28 @@
 
     </div>
   </div>
+
+  @{
+    var albums = ViewData["RandomAlbums"] as ICollection<Musichord.Models.Entities.Album>;
+}
+
+<div class="container">
+    <div class="row">
+        <h1 class="fw-bold text text-center">Album Spotlight</h1>
+        <p class="text text-center">See what other users on <i>musichord</i> are listening to:</p>
+    </div>
+    <div class="row row-cols-5 g-2">
+        @foreach (var album in albums ?? Enumerable.Empty<Musichord.Models.Entities.Album>())
+        {
+            <div class="col">
+                <img src="@album.ImageUrl"
+                     alt="@album.Name"
+                     class="img-fluid rounded"
+                     title="@album.Name" />
+            </div>
+        }
+    </div>
+</div>
 
 @section Scripts{
     <script defer type="module" src="~/js/musichordIndex.js"></script>
