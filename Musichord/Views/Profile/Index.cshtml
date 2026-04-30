@@ -56,12 +56,6 @@
             
 
             var track = Model.ElementAt(x);
-            @* <div class="col" align="center">
-                <p>@(x + 1)</p>
-                <img src="@track.ImageUrl" alt="Album Art" style="width: 64px; height: 64px;" />
-                <p>@track.Name</p>
-                <p>@track.Artist?.Name</p>
-            </div> *@
 
             <div class="col top-five-col">
                 <div class="card top-five-card h-100">
@@ -81,7 +75,6 @@
         } else {
             <h3 class="text-light text-center mt-5">@ViewData["Handle"]'s Other Liked Songs:</h3>
         }
-        @* <h3>Your other liked tracks :D</h3> *@
         <table class="table">
     <thead>
         <tr>

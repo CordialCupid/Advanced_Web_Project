@@ -81,8 +81,9 @@ export class ExploreDOM {
         const body = document.querySelector('.activity-body');
         body.appendChild(tableRow);
         tableRow.innerHTML = `
-            <td class="align-middle">${record.handle}</td>
+            <td class="align-middle">${record.userHandle}</td>
             <td class="align-middle">${record.trackName}</td>
+            <td class="align-middle"><img src="${record.profilePicture}" width="20px" height="20px"></td>
         `;
     }
 

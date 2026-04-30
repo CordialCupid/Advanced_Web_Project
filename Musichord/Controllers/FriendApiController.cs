@@ -40,9 +40,10 @@ public class FriendApiController : ControllerBase
         if (User.Identity?.Name != null)
         {
             var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
-            return Ok(await _userRepo.ReadAllExceptAsync(user.Handle));
+            var records = await _trackRepo.GetAllRecordExceptByUser(user.Handle);
+            return Ok(records);
         }
-        throw new InvalidOperationException("User cannot be null");
+        throw new InvalidOperationException("User cannot be null or something happened");
     }
 
 
