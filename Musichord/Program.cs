@@ -1,3 +1,7 @@
+using Musichord.Services.Interfaces.Friends;
+using Musichord.Services.Interfaces.TrackInterfaces;
+using Musichord.Services.Repositories;
+using Musichord.Services.ServiceLayer;
 using Musichord.Services;
 using Musichord.Models;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +34,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserRepository, DbUserRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
+builder.Services.AddScoped<IFriendshipService, FriendshipService>();
+builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IAlbumRepository, DbAlbumRepository>();
 
 builder.Services.AddScoped(sp => new HttpClient 

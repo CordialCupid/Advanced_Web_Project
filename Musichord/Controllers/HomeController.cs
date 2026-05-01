@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Build.Tasks;
 using Musichord.Models.ViewModels;
+using Musichord.Services.Interfaces.Friends;
 
 namespace Musichord.Controllers;
 
@@ -16,13 +17,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IUserRepository _userRepo;
-    private readonly IFriendshipRepo _friendRepo;
     private readonly IAlbumRepository _albumRepo;
-    public HomeController(ILogger<HomeController> logger, IUserRepository userRepo, IFriendshipRepo friendRepo, IAlbumRepository albumRepo)
+    private readonly IFriendshipService _friendService;
+    public HomeController(ILogger<HomeController> logger, IUserRepository userRepo, IFriendshipService friendService, IAlbumRepository albumRepo)
     {
         _logger = logger;
         _userRepo = userRepo;
-        _friendRepo = friendRepo;
+        _friendService = friendService;
         _albumRepo = albumRepo;
     }
 
@@ -30,12 +31,12 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {    
         
+        List<Friendship> friendsList = new();
+        var users = await _userRepo.ReadAllAsync();
+        var relationships = await _friendService.GetAllFriendshipsAsync();
         var randomAlbums = await _albumRepo.GetRandomAlbumsAsync(10);
         ViewData["RandomAlbums"] = randomAlbums;
 
-        // List<Friendship> friendsList = new();
-        // var users = await _userRepo.ReadAllAsync();
-        // var relationships = await _friendRepo.GetAllFriendshipsAsync();
         if (User.Identity != null)
         {
 
@@ -72,14 +73,17 @@ public class HomeController : Controller
                 Friends = new List<string>(),
                 FriendRequests = new List<string>()
             };
-            var friends = await _friendRepo.GetAllFriendshipsAsync();
-            var friendsList1 = friends.Where(f => f.SenderHandle == user.Handle && f.Status == "Accepted").Select(f => f.ReceiverHandle).ToList();      
-            var friendsList2 = friends.Where(f => f.ReceiverHandle == user.Handle && f.Status == "Accepted").Select(f => f.SenderHandle).ToList();    
-            model.Friends = friendsList1.Concat(friendsList2).ToList();
-            model.FriendRequests = (await _friendRepo.GetAllFriendshipsAsync())
-                                        .Where(f => f.ReceiverHandle == user.Handle && f.Status == "Pending")
-                                    .Select(f => f.SenderHandle)
-                                    .ToList();
+            if (user != null)
+            {
+                var friends = await _friendService.GetAllFriendshipsAsync();
+                var friendsList1 = friends.Where(f => f.SenderHandle == user.Handle && f.Status == "Accepted").Select(f => f.ReceiverHandle).ToList();      
+                var friendsList2 = friends.Where(f => f.ReceiverHandle == user.Handle && f.Status == "Accepted").Select(f => f.SenderHandle).ToList();    
+                model.Friends = friendsList1.Concat(friendsList2).ToList();
+                model.FriendRequests = (await _friendService.GetAllFriendshipsAsync())
+                                            .Where(f => f.ReceiverHandle == user.Handle && f.Status == "Pending")
+                                        .Select(f => f.SenderHandle)
+                                        .ToList();            
+            }
             return View(model);
         }
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

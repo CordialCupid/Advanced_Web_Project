@@ -5,6 +5,7 @@ using Musichord.Services;
 using Musichord.Services.Mappers;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Musichord.Services.Interfaces.TrackInterfaces;
 
 
 namespace Musichord.Controllers;
@@ -13,14 +14,14 @@ namespace Musichord.Controllers;
 [ApiController]
 public class SpotifyController : ControllerBase
 {
-    private readonly ITrackRepository _trackRepo;
+    private readonly ITrackService _trackService;
     private readonly IUserRepository _userRepo;
     private readonly ApplicationDbContext _db;
     private readonly HttpClient _httpClient;
 
-    public SpotifyController(ITrackRepository trackRepo, IUserRepository userRepo, ApplicationDbContext db, HttpClient client)
+    public SpotifyController(ITrackService trackService, IUserRepository userRepo, ApplicationDbContext db, HttpClient client)
     {
-        _trackRepo = trackRepo;
+        _trackService = trackService;
         _userRepo = userRepo;
         _db = db;
         _httpClient = client;
@@ -29,31 +30,27 @@ public class SpotifyController : ControllerBase
     [HttpGet("topfive/{accessToken}")]
     public async Task<IActionResult> GetFive(string accessToken)
     {   
+        List<Track> tracks = new();
         if (User.Identity?.Name == null)
         {
             return Unauthorized();
         }   
+
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
         string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=25&offset=0&time_range=short_term");
-
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine(response);
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-        Console.WriteLine("==============================================================================================");
-
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
-        var tracks = await SpotifyApiMapper.Map(topFives);
+
+        if (topFives != null)
+        {
+            tracks = await SpotifyApiMapper.Map(topFives);         
+        }
         
-        return Ok(await _trackRepo.CreateTopFive(currentUser.Id, tracks));
+        if (currentUser != null)
+        {
+            return Ok(await _trackService.CreateTopFive(currentUser.Id, tracks));
+            
+        }
+        return Unauthorized();
     }
 
     [HttpGet("recently-played/{accessToken}")]
@@ -78,7 +75,7 @@ public class SpotifyController : ControllerBase
         {
             return Unauthorized();
         }
-        return Ok(await _trackRepo.CreateListenRecords(currentUser, tracks));
+        return Ok(await _trackService.CreateListenRecords(currentUser, tracks));
     }
 
     public async Task<string> GetRequest(string accessToken, string uri)

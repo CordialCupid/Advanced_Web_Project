@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Musichord.Models.Entities;
 using Musichord.Services;
+using Musichord.Services.Interfaces.Friends;
+using Musichord.Services.Interfaces.TrackInterfaces;
 
 namespace Musichord.Controllers;
 
@@ -10,13 +12,13 @@ namespace Musichord.Controllers;
 [Authorize]
 public class FriendApiController : ControllerBase
 {
-    private readonly IFriendshipRepo _friendRepo;
+    private readonly IFriendshipService _friendService;
     private readonly IUserRepository _userRepo;
     private readonly ITrackRepository _trackRepo;
 
-    public FriendApiController(IFriendshipRepo friendRepo, IUserRepository userRepo, ITrackRepository trackRepo)
+    public FriendApiController(IFriendshipService friendService, IUserRepository userRepo, ITrackRepository trackRepo)
     {
-        _friendRepo = friendRepo;
+        _friendService = friendService;
         _userRepo = userRepo;
         _trackRepo = trackRepo;
     }
@@ -27,10 +29,21 @@ public class FriendApiController : ControllerBase
         if (User.Identity?.Name != null)
         {
             var user = await _userRepo.ReadByUsernameAsync(User.Identity.Name) ?? new ApplicationUser();
-            var users = await _friendRepo.GetAllNonFriends(user);
-            return Ok(users);         
+            var exceptUser = await _userRepo.ReadAllHandlesExceptUserAsync(user.Handle);
+            var users = await _friendService.GetAllNonFriends(exceptUser, user);
+
+            List<ApplicationUser> nons = new();
+            foreach (var u in users)
+            {
+                var non = await _userRepo.ReadByHandleAsync(u);
+                if (non != null)
+                {
+                    nons.Add(non);             
+                }
+            }
+            return Ok(nons);         
         }
-        throw new InvalidOperationException("User cannot be null");
+        return Unauthorized();
     }
 
     [HttpGet("nonfriends/records")]
@@ -43,7 +56,7 @@ public class FriendApiController : ControllerBase
             var records = await _trackRepo.GetAllRecordExceptByUser(user.Handle);
             return Ok(records);
         }
-        throw new InvalidOperationException("User cannot be null or something happened");
+        return Unauthorized();
     }
 
 
@@ -52,14 +65,14 @@ public class FriendApiController : ControllerBase
     {
         // find a way to check if there is a pending request already in place, if so accept that one... wait this is a put don't do that here
         var userRequested = await _userRepo.ReadByHandleAsync(username);
-        var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
+        var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity?.Name!);
 
         if (userRequested != null && currentUser != null)
         {
-            var newShip = await _friendRepo.CreateFriendship(currentUser, userRequested);
+            var newShip = await _friendService.CreateFriendship(currentUser, userRequested);
             return CreatedAtAction("Get", new {Id = newShip.Id}, newShip);          
         }
-        throw new ArgumentException($"Users being friended must both not be null: user1 {username} user2 {currentUser?.Handle}");
+        return Unauthorized();
     }
     
 
@@ -70,17 +83,10 @@ public class FriendApiController : ControllerBase
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
         if (username != null && currentUser != null)
         {
-            var allShips = await _friendRepo.GetAllFriendshipsAsync();
-            var pendingShip = allShips.FirstOrDefault(s => s.SenderHandle == username && s.ReceiverHandle == currentUser.Handle && s.Status == "Pending");
-            if (pendingShip != null)
-            {
-                pendingShip.Status = "Accepted";
-                await _friendRepo.UpdateFriendshipStatus(pendingShip.SenderHandle, pendingShip.ReceiverHandle);
-                return Ok(new { success = true });          
-            }
-            return NoContent();          
+            await _friendService.UpdateFriendshipStatus(username, currentUser.Handle);
+            return Ok(new { success = true });                   
         }
-        throw new ArgumentException("Users being friended must both not be null");
+        return Unauthorized();
     }
 
     // triggers when declining a friend request, should find the pending request and delete it, or delete an already accepted friendship if you unfriend someone
@@ -90,11 +96,11 @@ public class FriendApiController : ControllerBase
         var currentUser = await _userRepo.ReadByUsernameAsync(User.Identity!.Name!);
         if (username != null && currentUser != null)
         {
-            var allShips = await _friendRepo.GetAllFriendshipsAsync();
+            var allShips = await _friendService.GetAllFriendshipsAsync();
             var deleteShip = allShips.FirstOrDefault(s => (s.SenderHandle == username && s.ReceiverHandle == currentUser.Handle) || (s.ReceiverHandle == username && s.SenderHandle == currentUser.Handle));
             if (deleteShip != null)
             {
-                await _friendRepo.DeleteFriendship(deleteShip.SenderHandle, deleteShip.ReceiverHandle);
+                await _friendService.DeleteFriendship(deleteShip.SenderHandle, deleteShip.ReceiverHandle);
                 return NoContent();          
             }
             return NoContent();          

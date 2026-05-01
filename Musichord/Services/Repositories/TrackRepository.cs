@@ -1,8 +1,9 @@
 using Musichord.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using Musichord.Services.Interfaces.TrackInterfaces;
 
-namespace Musichord.Services;
+namespace Musichord.Services.Repositories;
 
 public class TrackRepository : ITrackRepository
 {
@@ -14,40 +15,11 @@ public class TrackRepository : ITrackRepository
     }
 
     // STANDARD TRACK METHODS
-    public async Task<List<Track>> CreateTracksAsync(List<Track> tracks)
+    public async Task<Track?> ReadTrackBySpotifyIdAsync(string id)
     {
-
-        foreach(Track track in tracks)
-        {
-            if (track.Artist != null)
-            {
-                var artist = await _db.Artists.FirstOrDefaultAsync( a => a.SpotifyArtistId == track.Artist.SpotifyArtistId);
-                if (artist != null)
-                {
-                    track.Artist = artist;
-                }          
-            }
-
-            if (track.Album != null)
-            {
-                var album = await _db.Albums.FirstOrDefaultAsync(a => a.SpotifyId == track.Album.SpotifyId);
-                if (album != null)
-                {
-
-                    track.Album = album;
-                }            
-            }
-
-            var existing = await _db.Tracks.FirstOrDefaultAsync(a => a.SpotifyId == track.SpotifyId);
-            if (existing == null)
-            {
-                await _db.Tracks.AddAsync(track);           
-                await _db.SaveChangesAsync();
-                existing = await _db.Tracks.FirstOrDefaultAsync(a => a.SpotifyId == track.SpotifyId);
-            }
-            track.Id = existing!.Id; 
-        }
-        return tracks; 
+        return await _db.Tracks
+                        .Include(t => t.Artist)
+                        .FirstOrDefaultAsync(t => t.SpotifyId == id);
     }
 
     public async Task<Track?> ReadTrackAsync(int id)
@@ -55,6 +27,12 @@ public class TrackRepository : ITrackRepository
         return await _db.Tracks
                         .Include(t => t.Artist)
                         .FirstOrDefaultAsync(t => t.Id == id);
+    }
+
+    public async Task CreateTrack(Track track)
+    {
+        await _db.Tracks.AddAsync(track);           
+        await _db.SaveChangesAsync();
     }
 
     // LISTEN RECORD (RECENTLY PLAYED) METHODS
@@ -65,60 +43,39 @@ public class TrackRepository : ITrackRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<List<ListenRecord>> GetAllRecordExceptByUser(string handle)
+    public async Task<ICollection<ListenRecord>> GetAllRecordExceptByUser(string handle)
     {
         return await _db.ListenRecords.Where(l => l.UserHandle != handle).ToListAsync();
     }
 
-    public async Task<List<ListenRecord>> CreateListenRecords(ApplicationUser user, List<Track> tracks)
+    public async Task<ListenRecord?> ReadListenRecord(int trackId, string userId)
     {
-        List<ListenRecord> records = new List<ListenRecord>();
-        var newTracks = await CreateTracksAsync(tracks);
-        records = newTracks.Select(t => new ListenRecord
-        {
-            Id = 0,
-            TrackId = t.Id,
-            UserId = user.Id,
-            UserHandle = user.Handle,
-            TrackName = t.Name,
-            ProfilePicture = user.ProfilePicture
-        }).ToList();
-
-        
-        if (records.Count() > 0 )
-        {
-            foreach (var record in records)
-            {
-                var rec = await _db.ListenRecords.FirstOrDefaultAsync(r => r.TrackId == record.TrackId && r.UserId == record.UserId);
-
-                if (rec == null)
-                {
-                    await CreateRecord(record);
-                }
-            }
-        }
-        return records;
+        return await _db.ListenRecords.FirstOrDefaultAsync(r => r.TrackId == trackId && r.UserId == userId);
     }
 
-
     // FAVORITE TRACK
-    public async Task<List<FavoriteTrack>> CreateTopFive(string userId, List<Track> tracks)
+    public async Task CreateFavoriteTracksAsync(ICollection<FavoriteTrack> favs)
     {
-        List<FavoriteTrack> favs = new List<FavoriteTrack>();
-        await _db.FavoriteTracks.Where(ft => ft.UserId == userId).ExecuteDeleteAsync();
-        var newTracks = await CreateTracksAsync(tracks);
-        favs = newTracks.Select(t => new FavoriteTrack
-        {
-            Id = 0,
-            TrackId = t.Id,
-            UserId = userId
-        }).ToList();
+        await _db.FavoriteTracks.AddRangeAsync(favs);
+        await _db.SaveChangesAsync();
+    }
 
-        if (favs.Count() > 0)
-        {
-            await _db.FavoriteTracks.AddRangeAsync(favs);
-            await _db.SaveChangesAsync();
-        }
-        return favs;
+    public async Task DeleteFavorites(string userId)
+    {
+        await _db.FavoriteTracks.Where(ft => ft.UserId == userId).ExecuteDeleteAsync();
+    }
+
+    // ALBUM METHODS
+
+    public async Task<Album?> ReadAlbum(string SpotifyId)
+    {
+        return await _db.Albums.FirstOrDefaultAsync(a => a.SpotifyId == SpotifyId);
+    }
+
+    // ARTIST METHODS
+
+    public async Task<Artist?> ReadArtist(string SpotifyArtistId)
+    {
+        return await _db.Artists.FirstOrDefaultAsync(a => a.SpotifyArtistId == SpotifyArtistId);
     }
 }
