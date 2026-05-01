@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Musichord.Models.Entities;
 
@@ -132,6 +134,7 @@ namespace Musichord.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                IdentityResult result;
                 user.SpotifyToken = Input.SpotifyToken;
                 user.Handle = Input.Handle;
                 if (!String.IsNullOrEmpty(Input.ProfilePicture))
@@ -147,7 +150,19 @@ namespace Musichord.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                try
+                {
+                    result = await _userManager.CreateAsync(user, Input.Password);
+                    
+                }
+                catch(SqliteException)
+                {
+                    return Page();
+                }
+                catch(DbUpdateException)
+                {
+                    return Page();
+                }
 
                 if (result.Succeeded)
                 {

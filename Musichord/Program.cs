@@ -36,7 +36,7 @@ builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IFriendshipRepo, FriendshipRepo>();
 builder.Services.AddScoped<IFriendshipService, FriendshipService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
-
+builder.Services.AddScoped<IAlbumRepository, DbAlbumRepository>();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 

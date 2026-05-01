@@ -30,18 +30,27 @@ public class SpotifyController : ControllerBase
     [HttpGet("topfive/{accessToken}")]
     public async Task<IActionResult> GetFive(string accessToken)
     {   
+        List<Track> tracks = new();
         if (User.Identity?.Name == null)
         {
             return Unauthorized();
         }   
+
         ApplicationUser? currentUser = await _userRepo.ReadByUsernameAsync(User.Identity.Name);
         string response = await GetRequest(accessToken, "https://api.spotify.com/v1/me/top/tracks?limit=25&offset=0&time_range=short_term");
-
         TopFiveDTO? topFives = JsonSerializer.Deserialize<TopFiveDTO>(response);
-        var tracks = await SpotifyApiMapper.Map(topFives);
-        
-        return Ok(await _trackService.CreateTopFive(currentUser.Id, tracks));
 
+        if (topFives != null)
+        {
+            tracks = await SpotifyApiMapper.Map(topFives);         
+        }
+        
+        if (currentUser != null)
+        {
+            return Ok(await _trackService.CreateTopFive(currentUser.Id, tracks));
+            
+        }
+        return Unauthorized();
     }
 
     [HttpGet("recently-played/{accessToken}")]

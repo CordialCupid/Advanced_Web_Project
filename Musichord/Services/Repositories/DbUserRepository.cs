@@ -64,6 +64,9 @@ public class DbUserRepository : IUserRepository
             .Where(u => u.UserName == username)
             .Include(u => u.FavoriteTracks)
                 .ThenInclude(ft => ft.Track)
+                    .ThenInclude(t => t.Artist)  // ✅ Add this
+            .Include(u => u.FavoriteTracks)
+                .ThenInclude(ft => ft.Track)
                     .ThenInclude(t => t.Album)
             .FirstOrDefaultAsync();
     }
